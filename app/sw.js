@@ -1,8 +1,7 @@
-const STATIC_CACHE = "ledlab-static-v4";
+const STATIC_CACHE = "ledlab-static-v5";
 const RUNTIME_CACHE = "ledlab-runtime-v1";
 
 const APP_SHELL = [
-  "./",
   "./main.html",
   "./manifest.webmanifest",
   "./src/main.js",
@@ -18,7 +17,13 @@ self.addEventListener("install", (event) => {
   event.waitUntil(
     caches
       .open(STATIC_CACHE)
-      .then((cache) => cache.addAll(APP_SHELL))
+      .then((cache) =>
+        Promise.all(
+          APP_SHELL.map((assetUrl) =>
+            cache.add(assetUrl).catch(() => null),
+          ),
+        ),
+      )
       .then(() => self.skipWaiting()),
   );
 });
