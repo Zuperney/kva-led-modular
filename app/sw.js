@@ -1,4 +1,4 @@
-const STATIC_CACHE = "ledlab-static-v2";
+const STATIC_CACHE = "ledlab-static-v3";
 const RUNTIME_CACHE = "ledlab-runtime-v1";
 
 const APP_SHELL = [
@@ -100,6 +100,12 @@ self.addEventListener("fetch", (event) => {
   }
 
   if (!isStaticDestination) return;
+
+  if (destination === "document") {
+    // Keep HTML always fresh after deployments.
+    event.respondWith(networkFirst(request));
+    return;
+  }
 
   event.respondWith(cacheFirst(request));
 });
