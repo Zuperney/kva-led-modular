@@ -1,3 +1,5 @@
+import { TECH_LIMITS } from "../../core/constants.js";
+
 export function renderCabinetsView(params) {
   const { cardsContainer, tableBody, cabinets, escapeHtml, formatNumber } =
     params;
@@ -76,7 +78,7 @@ function renderCabinetTable(tbody, cabinets, escapeHtml, formatNumber) {
         formatNumber(cab.fp, 2) +
         "</td>" +
         "<td>" +
-        Math.floor(655360 / (cab.px_w * cab.px_h)) +
+        Math.floor(TECH_LIMITS.PIXELS_PER_PORT / (cab.px_w * cab.px_h)) +
         "</td>" +
         "</tr>",
     )

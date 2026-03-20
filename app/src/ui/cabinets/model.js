@@ -1,3 +1,5 @@
+import { toPositiveInt, toPositiveNumber } from "../../core/parsers.js";
+
 const CABINET_STORAGE_KEY = "kva-led-cabinets-v1";
 
 export function readCabinetForm(refs) {
@@ -67,7 +69,12 @@ export function loadCabinetCatalog(state) {
 }
 
 export function persistCabinets(cabinets) {
-  localStorage.setItem(CABINET_STORAGE_KEY, JSON.stringify(cabinets));
+  try {
+    localStorage.setItem(CABINET_STORAGE_KEY, JSON.stringify(cabinets));
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 export function collectCabinetsFromScreens(screens = []) {
@@ -173,14 +180,4 @@ function isCabinetLike(item) {
     Number(item.watts_max) > 0 &&
     Number(item.peso_kg) > 0
   );
-}
-
-function toPositiveInt(value) {
-  const parsed = Number.parseInt(String(value), 10);
-  return Number.isInteger(parsed) && parsed > 0 ? parsed : NaN;
-}
-
-function toPositiveNumber(value) {
-  const parsed = Number.parseFloat(String(value));
-  return Number.isFinite(parsed) && parsed > 0 ? parsed : NaN;
 }

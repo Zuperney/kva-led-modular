@@ -1,4 +1,8 @@
-import { loadProject, saveProject } from "../adapters/storage.js";
+import {
+  canUseLocalStorage,
+  loadProject,
+  saveProject,
+} from "../adapters/storage.js";
 import { bindEvents } from "./app-events.js";
 import { renderAll } from "./app-render.js";
 import {
@@ -8,6 +12,7 @@ import {
 import { createDefaultProject } from "./defaults.js";
 import { syncElectricalControls } from "./electrical/controller.js";
 import { loadElectricalSystemPreference } from "./electrical/preferences.js";
+import { setupReportPrintHandlers } from "./report/view.js";
 import { createUiRefs } from "./refs.js";
 import {
   clampNonNegativeNumber,
@@ -22,8 +27,38 @@ function refreshIcons() {
   lucide.createIcons();
 }
 
+function setupConnectivityStatus(refs) {
+  const node = refs.networkStatus;
+  if (!node) return;
+
+  const update = () => {
+    const online = navigator.onLine !== false;
+    node.textContent = online ? "Online" : "Offline";
+    node.classList.toggle("is-online", online);
+    node.classList.toggle("is-offline", !online);
+  };
+
+  window.addEventListener("online", update);
+  window.addEventListener("offline", update);
+  update();
+}
+
 export function bootstrapApp() {
   const refs = createUiRefs();
+  let warnedStorageFallback = false;
+
+  function notifyStorageFallback() {
+    if (warnedStorageFallback) return;
+    warnedStorageFallback = true;
+    if (refs.migrationStatus) {
+      refs.migrationStatus.textContent =
+        "Aviso: armazenamento local indisponivel. O app segue em modo sem persistencia nesta sessao.";
+    }
+  }
+
+  if (!canUseLocalStorage()) {
+    notifyStorageFallback();
+  }
 
   let state = loadProject() || createDefaultProject();
   if (!Array.isArray(state.screens) || state.screens.length === 0) {
@@ -51,7 +86,10 @@ export function bootstrapApp() {
     () => ui,
     (nextState) => {
       state = nextState;
-      saveProject(state);
+      const persisted = saveProject(state);
+      if (!persisted) {
+        notifyStorageFallback();
+      }
       renderAll(refs, state, ui);
       refreshIcons();
     },
@@ -64,4 +102,6 @@ export function bootstrapApp() {
 
   renderAll(refs, state, ui);
   refreshIcons();
+  setupConnectivityStatus(refs);
+  setupReportPrintHandlers();
 }

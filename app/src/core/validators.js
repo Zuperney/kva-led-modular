@@ -1,4 +1,9 @@
 import { DEFAULTS } from "./constants.js";
+import {
+  toPositiveInt,
+  toPositiveNumber,
+  resolvePowerFactor,
+} from "./parsers.js";
 
 export function validateCabinet(cabinet, label = "gabinete") {
   const errors = [];
@@ -113,16 +118,6 @@ export function validateProjectInput(input) {
   };
 }
 
-function toPositiveInt(value) {
-  const parsed = Number.parseInt(value, 10);
-  return Number.isInteger(parsed) && parsed > 0 ? parsed : NaN;
-}
-
-function toPositiveNumber(value) {
-  const parsed = Number.parseFloat(value);
-  return Number.isFinite(parsed) && parsed > 0 ? parsed : NaN;
-}
-
 function toNonNegativeNumber(value) {
   const parsed = Number.parseFloat(value);
   return Number.isFinite(parsed) && parsed >= 0 ? parsed : NaN;
@@ -138,9 +133,4 @@ function toRangeNumber(value, min, max) {
 function toPhase(value) {
   const parsed = Number.parseInt(value, 10);
   return parsed === 3 ? 3 : 1;
-}
-
-function resolvePowerFactor(value) {
-  const parsed = Number.parseFloat(value);
-  return Number.isFinite(parsed) && parsed > 0 ? parsed : DEFAULTS.POWER_FACTOR;
 }

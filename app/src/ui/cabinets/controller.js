@@ -1,3 +1,5 @@
+import { resolveImportLimits } from "../../core/platform.js";
+
 export function bindCabinetEvents(params) {
   const {
     refs,
@@ -53,7 +55,11 @@ export function bindCabinetEvents(params) {
     if (!(input instanceof HTMLInputElement) || !input.files?.[0]) return;
 
     try {
-      const text = await readFileText(input.files[0]);
+      const importLimits = resolveImportLimits();
+      const text = await readFileText(input.files[0], {
+        maxBytes: importLimits.CATALOG_FILE_MAX_BYTES,
+        fileLabel: "arquivo de catalogo",
+      });
       const parsed = parseCatalogInput(text);
       const importedCatalog = parsed.cabinets.map((cabinet, index) => ({
         ...cabinet,
@@ -62,7 +68,7 @@ export function bindCabinetEvents(params) {
 
       const ui = getUi();
       const merged = mergeCatalog(ui.cabinets, importedCatalog);
-      persistCabinets(merged);
+      const persisted = persistCabinets(merged);
       setUi({ cabinets: merged });
       setState(normalizeScreensWithCatalog(getState(), merged));
 
@@ -73,7 +79,8 @@ export function bindCabinetEvents(params) {
           " itens validos" +
           (parsed.skipped.length
             ? " | " + parsed.skipped.length + " linhas ignoradas"
-            : "");
+            : "") +
+          (persisted ? "" : " | Aviso: sem persistencia local nesta sessao.");
       }
     } catch (error) {
       if (refs.migrationStatus) {
@@ -107,16 +114,18 @@ export function bindCabinetEvents(params) {
         )
       : mergeCatalog(ui.cabinets, [cabinet]);
 
-    persistCabinets(merged);
+    const persisted = persistCabinets(merged);
     clearCabinetForm(refs);
     resetCabinetEditMode();
     setUi({ cabinets: merged });
     setState(normalizeScreensWithCatalog(getState(), merged));
 
     if (refs.migrationStatus) {
-      refs.migrationStatus.textContent = wasEditing
-        ? "Gabinete atualizado no catalogo local."
-        : "Gabinete cadastrado no catalogo local.";
+      refs.migrationStatus.textContent =
+        (wasEditing
+          ? "Gabinete atualizado no catalogo local."
+          : "Gabinete cadastrado no catalogo local.") +
+        (persisted ? "" : " Aviso: sem persistencia local nesta sessao.");
     }
   });
 
@@ -162,8 +171,13 @@ export function bindCabinetEvents(params) {
       resetCabinetEditMode();
     }
 
-    persistCabinets(nextCatalog);
+    const persisted = persistCabinets(nextCatalog);
     setUi({ cabinets: nextCatalog });
     setState(normalizeScreensWithCatalog(getState(), nextCatalog));
+
+    if (!persisted && refs.migrationStatus) {
+      refs.migrationStatus.textContent =
+        "Gabinete removido. Aviso: sem persistencia local nesta sessao.";
+    }
   });
 }

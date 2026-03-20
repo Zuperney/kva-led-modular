@@ -52,6 +52,8 @@ export function renderReportView(params) {
     clampRangeNumber,
   } = params;
 
+  if (!result || !Array.isArray(result.screens)) return;
+
   renderReportTable(
     refs.reportBody,
     result.screens,
@@ -88,6 +90,7 @@ function renderReportPreview(args) {
   } = args;
   const container = refs.reportPreview;
   if (!container) return;
+  if (!result?.screens?.length) return;
 
   const reportType = uiState?.reportType || "complete";
   const reportMeta = REPORT_TYPE_META[reportType] || REPORT_TYPE_META.complete;
@@ -716,6 +719,51 @@ function buildCabinetTotals(screens) {
   }));
 }
 
+/**
+ * Registra handlers de beforeprint/afterprint para converter canvas de
+ * cabeamento em <img> antes de imprimir (Firefox/Safari nao imprimem canvas).
+ * Deve ser chamado uma unica vez na inicializacao do app.
+ */
+export function setupReportPrintHandlers() {
+  window.addEventListener("beforeprint", snapshotReportCanvases);
+  window.addEventListener("afterprint", restoreReportCanvases);
+}
+
+function snapshotReportCanvases() {
+  document
+    .querySelectorAll("canvas[data-report-screen-id]")
+    .forEach((canvas) => {
+      if (!(canvas instanceof HTMLCanvasElement)) return;
+      if (canvas.dataset.printSnapshotDone === "1") return;
+      let dataUrl;
+      try {
+        dataUrl = canvas.toDataURL("image/png");
+      } catch {
+        return;
+      }
+      const img = document.createElement("img");
+      img.src = dataUrl;
+      img.className = canvas.className + " report-detail-canvas-print";
+      img.dataset.printSnapshotFor = canvas.dataset.reportScreenId;
+      img.setAttribute("aria-hidden", "true");
+      canvas.dataset.printSnapshotDone = "1";
+      canvas.style.display = "none";
+      canvas.insertAdjacentElement("afterend", img);
+    });
+}
+
+function restoreReportCanvases() {
+  document
+    .querySelectorAll("img[data-print-snapshot-for]")
+    .forEach((img) => img.remove());
+  document
+    .querySelectorAll("canvas[data-print-snapshot-done]")
+    .forEach((canvas) => {
+      canvas.style.display = "";
+      delete canvas.dataset.printSnapshotDone;
+    });
+}
+
 function paintReportCanvases(container, screens, layouts, orientation) {
   const layoutById = new Map(layouts.map((item) => [String(item.id), item]));
   const screenById = new Map(screens.map((item) => [String(item.id), item]));
@@ -1066,8 +1114,9 @@ function renderReportMeta(
   formatInteger,
   clampRangeNumber,
 ) {
-  const totals = result.totals;
-  const cfg = result.config;
+  const totals = result?.totals;
+  const cfg = result?.config;
+  if (!totals || !cfg) return;
 
   if (refs.rptGeneratedAt) {
     refs.rptGeneratedAt.textContent = new Date().toLocaleString("pt-BR");

@@ -1,0 +1,85 @@
+{
+  "version": "template.telas.v1",
+  "descricao": "Template para cadastro/importacao de telas do projeto",
+  "instrucoes_simples": [
+    "Preencha as configuracoes gerais em config.",
+    "Adicione cada tela dentro de telas: [ ... ].",
+    "Use os campos: id, nome, quantidade_colunas, quantidade_linhas, gabinete_nome.",
+    "quantidade_colunas e quantidade_linhas devem ser numeros inteiros maiores que zero.",
+    "gabinete_nome deve ser igual ao nome do gabinete importado no catalogo.",
+    "Em config, brilho representa percentual de uso (100 = potencia maxima do gabinete).",
+    "Mantenha os nomes dos campos exatamente iguais a este modelo."
+  ],
+  "config": {
+    "tensao": 380,
+    "fase": 3,
+    "brilho": 30,
+    "margem": 15,
+    "reservaCircuito": 10
+  },
+  "telas": [
+    {
+      "id": "tela-001",
+      "nome": "Testeira",
+      "quantidade_colunas": 61,
+      "quantidade_linhas": 1,
+      "gabinete_nome": "MG10 P2.6"
+    },
+    {
+      "id": "tela-002",
+      "nome": "Redondo | 01",
+      "quantidade_colunas": 10,
+      "quantidade_linhas": 6,
+      "gabinete_nome": "MG10 P2.6"
+    },
+    {
+      "id": "tela-003",
+      "nome": "Redondo | 02.1",
+      "quantidade_colunas": 6,
+      "quantidade_linhas": 1,
+      "gabinete_nome": "MG10 P2.6"
+    },
+    {
+      "id": "tela-004",
+      "nome": "Redondo | 02.2",
+      "quantidade_colunas": 4,
+      "quantidade_linhas": 2,
+      "gabinete_nome": "MG10 P2.6"
+    },
+    {
+      "id": "tela-005",
+      "nome": "Redondo | 03",
+      "quantidade_colunas": 5,
+      "quantidade_linhas": 6,
+      "gabinete_nome": "MG10 P2.6"
+    },
+    {
+      "id": "tela-006",
+      "nome": "Redondo | 04",
+      "quantidade_colunas": 6,
+      "quantidade_linhas": 1,
+      "gabinete_nome": "MG10 P2.6"
+    },
+    {
+      "id": "tela-007",
+      "nome": "Redondo | 05",
+      "quantidade_colunas": 14,
+      "quantidade_linhas": 6,
+      "gabinete_nome": "MG10 P2.6"
+    },
+    {
+      "id": "tela-008",
+      "nome": "Plenaria | 01",
+      "quantidade_colunas": 9,
+      "quantidade_linhas": 5,
+      "gabinete_nome": "MG10 P2.6"
+    },
+    {
+      "id": "tela-009",
+      "nome": "Plenaria | 02",
+      "quantidade_colunas": 9,
+      "quantidade_linhas": 5,
+      "gabinete_nome": "MG10 P2.6"
+    }
+  ]
+}

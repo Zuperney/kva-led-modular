@@ -1,4 +1,5 @@
 import { buildCablingLayouts } from "../../core/cabling.js";
+import { resolveTestCardExportLimits } from "../../core/platform.js";
 
 export function drawTestCardPreview(
   ctx,
@@ -9,6 +10,8 @@ export function drawTestCardPreview(
   config,
   activePlacementId,
 ) {
+  if (!ctx || !composition || !uiState)
+    return { cardConfig: null, preview: null };
   const cardConfig = {
     preset: uiState.testCardPreset,
     title: uiState.testCardTitle,
@@ -71,8 +74,10 @@ export function drawTestCardPreview(
 }
 
 export function buildTestCardExportCanvas(composition, uiState, config) {
-  const maxDimension = 40000;
-  const maxArea = 300000000;
+  if (!composition || !uiState) return { canvas: null, exportScale: 1 };
+  const exportLimits = resolveTestCardExportLimits();
+  const maxDimension = exportLimits.maxDimension;
+  const maxArea = exportLimits.maxArea;
 
   let exportScale = 1;
   if (composition.width > maxDimension || composition.height > maxDimension) {
@@ -221,9 +226,10 @@ function drawCompositionFrames(ctx, composition, options) {
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
 
-  const overlapIds = findOverlappingPlacementIds(composition.placements);
+  const placements = composition.placements ?? [];
+  const overlapIds = findOverlappingPlacementIds(placements);
 
-  composition.placements.forEach((item, index) => {
+  placements.forEach((item, index) => {
     const x = offsetX + item.x * scaleX;
     const y = offsetY + item.y * scaleY;
     const width = item.width * scaleX;

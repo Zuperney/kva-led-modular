@@ -1,3 +1,5 @@
+import { resolveImportLimits } from "../../core/platform.js";
+
 export function bindProjectEvents(params) {
   const {
     refs,
@@ -47,18 +49,24 @@ export function bindProjectEvents(params) {
     if (!(input instanceof HTMLInputElement) || !input.files?.[0]) return;
 
     try {
-      const text = await readFileText(input.files[0]);
+      const importLimits = resolveImportLimits();
+      const text = await readFileText(input.files[0], {
+        maxBytes: importLimits.PROJECT_FILE_MAX_BYTES,
+        fileLabel: "arquivo de projeto",
+      });
       const ui = getUi();
       const imported = importProjectJson(text, { catalog: ui.cabinets });
       ui.cabinets = mergeCatalog(
         ui.cabinets,
         collectCabinetsFromScreens(imported.screens),
       );
-      persistCabinets(ui.cabinets);
+      const persisted = persistCabinets(ui.cabinets);
       setState(normalizeScreensWithCatalog(imported, ui.cabinets));
 
       if (refs.migrationStatus) {
-        refs.migrationStatus.textContent = "Projeto importado com sucesso.";
+        refs.migrationStatus.textContent =
+          "Projeto importado com sucesso." +
+          (persisted ? "" : " Aviso: sem persistencia local nesta sessao.");
       }
     } catch (error) {
       if (refs.migrationStatus) {

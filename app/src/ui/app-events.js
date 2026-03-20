@@ -27,6 +27,62 @@ import {
 import { bindTestCardEvents } from "./testcard/controller.js";
 import { exportTestCard } from "./testcard/export.js";
 
+function shouldUseMobilePdfFallback() {
+  const ua = navigator.userAgent || "";
+  const isMobileUa = /Android|iPhone|iPad|iPod/i.test(ua);
+  const isStandalone =
+    Boolean(window.matchMedia?.("(display-mode: standalone)")?.matches) ||
+    window.navigator.standalone === true;
+  return isMobileUa || isStandalone;
+}
+
+function openReportPdfFallback(refs) {
+  const source = refs.reportPreview;
+  if (!source) return false;
+
+  const clone = source.cloneNode(true);
+  const sourceCanvases = source.querySelectorAll(
+    "canvas[data-report-screen-id]",
+  );
+  const cloneCanvases = clone.querySelectorAll("canvas[data-report-screen-id]");
+
+  sourceCanvases.forEach((sourceCanvas, index) => {
+    const cloneCanvas = cloneCanvases[index];
+    if (!(cloneCanvas instanceof HTMLCanvasElement)) return;
+    if (!(sourceCanvas instanceof HTMLCanvasElement)) return;
+
+    let dataUrl = "";
+    try {
+      dataUrl = sourceCanvas.toDataURL("image/png");
+    } catch {
+      dataUrl = "";
+    }
+
+    if (!dataUrl) return;
+
+    const image = document.createElement("img");
+    image.src = dataUrl;
+    image.className = sourceCanvas.className + " report-detail-canvas-print";
+    image.alt = "Mapa de cabeamento da tela";
+    cloneCanvas.replaceWith(image);
+  });
+
+  const win = window.open(
+    "",
+    "_blank",
+    "noopener,noreferrer,width=1200,height=900",
+  );
+  if (!win) return false;
+
+  win.document.write(
+    '<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Relatorio LedLab CORE</title><link rel="stylesheet" href="./src/styles/main.css"><style>body{margin:0;padding:16px;background:#fff} .report-sheet{border:none;padding:0} .report-page{box-shadow:none} .report-preview-head{display:none}</style></head><body>' +
+      clone.innerHTML +
+      "<script>window.onload=function(){window.print();};<\/script></body></html>",
+  );
+  win.document.close();
+  return true;
+}
+
 export function bindEvents(refs, getState, getUi, setState, setUi) {
   refs.navButtons.forEach((button) => {
     button.addEventListener("click", () => {
@@ -111,6 +167,10 @@ export function bindEvents(refs, getState, getUi, setState, setUi) {
 
   refs.btnPrintReport?.addEventListener("click", () => {
     document.body.classList.remove("print-compact");
+    if (shouldUseMobilePdfFallback() && refs.migrationStatus) {
+      refs.migrationStatus.textContent =
+        "Em mobile/PWA, use Exportar PDF para um caminho mais confiavel de geracao.";
+    }
     window.print();
   });
 
@@ -130,6 +190,15 @@ export function bindEvents(refs, getState, getUi, setState, setUi) {
 
   refs.btnExportDetailedReportPdf?.addEventListener("click", () => {
     document.body.classList.remove("print-compact");
+    if (typeof window.print !== "function" || shouldUseMobilePdfFallback()) {
+      const opened = openReportPdfFallback(refs);
+      if (refs.migrationStatus) {
+        refs.migrationStatus.textContent = opened
+          ? "Relatorio aberto em janela auxiliar para exportacao PDF no mobile/PWA."
+          : "Nao foi possivel abrir janela de exportacao PDF. Verifique bloqueio de pop-up.";
+      }
+      return;
+    }
     window.print();
   });
 }

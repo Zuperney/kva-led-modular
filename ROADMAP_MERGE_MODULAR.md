@@ -374,16 +374,16 @@ Objetivo desta etapa final:
 #### Passo 1 - Limpeza, fallback e hardening (obrigatorio)
 
 - [ ] Limpar artefatos de desenvolvimento e codigo nao utilizado
-  - [ ] Remover arquivo/modulo morto (`app/src/ui/boot-info.js`) ou recolocar uso real
-  - [ ] Remover exports sem uso ou documentar intencao (`clearProject`)
+  - [x] Remover arquivo/modulo morto (`app/src/ui/boot-info.js`) ou recolocar uso real
+  - [x] Remover exports sem uso ou documentar intencao (`clearProject`)
 - [ ] Implementar fallbacks de UX para cenarios criticos
-  - [ ] Fallback quando `localStorage` falhar (mensagem clara + modo sem persistencia)
-  - [ ] Fallback para leitura de arquivo muito grande (limite + feedback de erro)
-  - [ ] Fallback para renderizacao de canvas em limite de memoria (reduzir escala + aviso)
+  - [x] Fallback quando `localStorage` falhar (mensagem clara + modo sem persistencia)
+  - [x] Fallback para leitura de arquivo muito grande (limite + feedback de erro)
+  - [x] Fallback para renderizacao de canvas em limite de memoria (reduzir escala + aviso)
 - [ ] Corrigir pontos tecnicos de manutencao
-  - [ ] Substituir numero magico `655360` por `TECH_LIMITS.PIXELS_PER_PORT` em toda UI
-  - [ ] Consolidar validacoes duplicadas (`toPositiveInt`, `toPositiveNumber`, `resolvePowerFactor`)
-  - [ ] Adicionar guardas nulos em pontos sensiveis de render (cabling/testcard/report)
+  - [x] Substituir numero magico `655360` por `TECH_LIMITS.PIXELS_PER_PORT` em toda UI
+  - [x] Consolidar validacoes duplicadas (`toPositiveInt`, `toPositiveNumber`, `resolvePowerFactor`)
+  - [x] Adicionar guardas nulos em pontos sensiveis de render (cabling/testcard/report)
 
 Critero de aceite do Passo 1:
 
@@ -393,14 +393,14 @@ Critero de aceite do Passo 1:
 
 #### Passo 2 - Estabilidade de relatorio no navegador
 
-- [ ] Validar relatorios em Chrome/Edge/Firefox (desktop e mobile browser)
-- [ ] Garantir consistencia entre tipos de relatorio (completo, resumido, design, estrutural, eletrico, gabinetes)
-- [ ] Revisar paginacao de impressao para projetos grandes
+- [x] Validar relatorios em Chrome/Edge/Firefox (desktop e mobile browser)
+- [x] Garantir consistencia entre tipos de relatorio (completo, resumido, design, estrutural, eletrico, gabinetes)
+- [x] Revisar paginacao de impressao para projetos grandes
 
 Critero de aceite do Passo 2:
 
-- [ ] Relatorio abre e imprime sem corte em browser desktop
-- [ ] Preview de relatorio funcional no mobile browser
+- [x] Relatorio abre e imprime sem corte em browser desktop
+- [x] Preview de relatorio funcional no mobile browser
 
 #### Passo 3 - Publicacao web
 
@@ -418,9 +418,9 @@ Critero de aceite do Passo 3:
 
 #### Passo 1 - Base PWA sem quebrar o core
 
-- [ ] Criar `manifest.webmanifest` (nome, icones, start_url, display standalone)
-- [ ] Adicionar icones e metadata para Android/iOS
-- [ ] Registrar service worker inicial apenas para assets estaticos
+- [x] Criar `manifest.webmanifest` (nome, icones, start_url, display standalone)
+- [x] Adicionar icones e metadata para Android/iOS
+- [x] Registrar service worker inicial apenas para assets estaticos
 
 Critero de aceite:
 
@@ -429,9 +429,9 @@ Critero de aceite:
 
 #### Passo 2 - Estrategia offline incremental
 
-- [ ] Cache-first para shell da aplicacao (HTML/CSS/JS estaticos)
-- [ ] Network-first para arquivos de projeto/importacao (quando aplicavel)
-- [ ] Tela de status offline/online na UI
+- [x] Cache-first para shell da aplicacao (HTML/CSS/JS estaticos)
+- [x] Network-first para arquivos de projeto/importacao (quando aplicavel)
+- [x] Tela de status offline/online na UI
 
 Critero de aceite:
 
@@ -439,17 +439,17 @@ Critero de aceite:
 
 #### Passo 3 - Fallback de relatorio para contexto PWA/mobile
 
-- [ ] Manter `window.print()` como caminho principal em desktop
-- [ ] Adicionar fallback de exportacao PDF para mobile/PWA (quando print nao estiver disponivel)
-- [ ] Exibir mensagem contextual quando o navegador limitar impressao
+- [x] Manter `window.print()` como caminho principal em desktop
+- [x] Adicionar fallback de exportacao PDF para mobile/PWA (quando print nao estiver disponivel)
+- [x] Exibir mensagem contextual quando o navegador limitar impressao
 
 Critero de aceite:
 
-- [ ] Usuario mobile consegue exportar relatorio por ao menos um caminho confiavel
+- [x] Usuario mobile consegue exportar relatorio por ao menos um caminho confiavel
 
 #### Passo 4 - Compatibilidade iPhone (Safari)
 
-- [ ] Ajustar metadata Apple (`apple-touch-icon`, `apple-mobile-web-app-capable`)
+- [x] Ajustar metadata Apple (`apple-touch-icon`, `apple-mobile-web-app-capable`)
 - [ ] Testar instalacao no iOS e comportamento standalone
 - [ ] Validar limites de arquivo/canvas no Safari iOS
 

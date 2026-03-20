@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="LedLab CORE">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f766e"/>
+      <stop offset="100%" stop-color="#1d4ed8"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="96" fill="url(#bg)"/>
+  <rect x="74" y="74" width="364" height="364" rx="56" fill="rgba(255,255,255,0.12)"/>
+  <path d="M138 356V156h48v160h102v40H138zm164-200h48v200h-48V156z" fill="#ffffff"/>
+</svg>

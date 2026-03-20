@@ -1,4 +1,9 @@
 import { DEFAULTS } from "../core/constants.js";
+import {
+  toPositiveInt,
+  toPositiveNumber,
+  resolvePowerFactor,
+} from "../core/parsers.js";
 
 /**
  * Parser unico para catalogo de gabinetes em TXT/CSV.
@@ -198,27 +203,6 @@ function extractCabinetList(value) {
 
 function looksLikeJson(value) {
   return value.startsWith("{") || value.startsWith("[");
-}
-
-function resolvePowerFactor(value) {
-  const parsed = Number.parseFloat(normalizeNumber(value));
-  return Number.isFinite(parsed) && parsed > 0 ? parsed : DEFAULTS.POWER_FACTOR;
-}
-
-function toPositiveInt(value) {
-  const parsed = Number.parseInt(normalizeNumber(value), 10);
-  return Number.isInteger(parsed) && parsed > 0 ? parsed : NaN;
-}
-
-function toPositiveNumber(value) {
-  const parsed = Number.parseFloat(normalizeNumber(value));
-  return Number.isFinite(parsed) && parsed > 0 ? parsed : NaN;
-}
-
-function normalizeNumber(value) {
-  return String(value ?? "")
-    .trim()
-    .replace(",", ".");
 }
 
 function lineReason(lineNumber, reason) {

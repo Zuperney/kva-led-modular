@@ -1,4 +1,5 @@
 import { DEFAULTS } from "../core/constants.js";
+import { toPositiveInt, toPositiveNumber } from "../core/parsers.js";
 import { normalizeProjectV1 } from "../core/project-schema.js";
 
 /**
@@ -62,14 +63,4 @@ function mapLedLabScreen(screen, index) {
       fp: DEFAULTS.POWER_FACTOR,
     },
   };
-}
-
-function toPositiveInt(value, fallback) {
-  const parsed = Number.parseInt(value, 10);
-  return Number.isInteger(parsed) && parsed > 0 ? parsed : fallback;
-}
-
-function toPositiveNumber(value, fallback) {
-  const parsed = Number.parseFloat(value);
-  return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
 }

@@ -5,6 +5,18 @@ import {
   migrateLegacyProjectData,
 } from "../core/project-schema.js";
 
+const STORAGE_PROBE_KEY = "__kva_led_storage_probe__";
+
+export function canUseLocalStorage() {
+  try {
+    localStorage.setItem(STORAGE_PROBE_KEY, "1");
+    localStorage.removeItem(STORAGE_PROBE_KEY);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 export function loadProject() {
   try {
     const activeRaw = localStorage.getItem(STORAGE_KEYS.ACTIVE);
@@ -41,13 +53,14 @@ export function loadProject() {
 }
 
 export function saveProject(data) {
-  const normalized = normalizeProjectV1(data);
-  normalized.meta.updatedAt = new Date().toISOString();
-  localStorage.setItem(STORAGE_KEYS.ACTIVE, JSON.stringify(normalized));
-}
-
-export function clearProject() {
-  localStorage.removeItem(STORAGE_KEYS.ACTIVE);
+  try {
+    const normalized = normalizeProjectV1(data);
+    normalized.meta.updatedAt = new Date().toISOString();
+    localStorage.setItem(STORAGE_KEYS.ACTIVE, JSON.stringify(normalized));
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 function isLegacyShape(value) {

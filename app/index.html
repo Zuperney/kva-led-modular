@@ -4,6 +4,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0f766e">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="LedLab CORE">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" type="image/png" sizes="192x192" href="./assets/icons/icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="./assets/icons/icon-512.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="./assets/icons/apple-touch-icon.png">
   <title>LedLab CORE</title>
   <link rel="stylesheet" href="./src/styles/main.css">
 </head>
@@ -12,6 +21,7 @@
   <div class="shell">
     <header class="hero">
       <h1>LedLab CORE</h1>
+      <button id="btnTopCompactToggle" class="hero-toggle" type="button" aria-expanded="false">Mostrar topo</button>
       <p>
         Base modular da aplicacao. Esta interface preserva o estilo visual do projeto atual
         enquanto a logica e migrada para modulos independentes.
@@ -282,6 +292,7 @@
         </section>
 
         <div id="migrationStatus"></div>
+        <div id="networkStatus" class="network-status" role="status" aria-live="polite">Online</div>
       </aside>
 
       <main class="panel">

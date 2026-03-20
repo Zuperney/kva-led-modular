@@ -1,4 +1,5 @@
 import { TECH_LIMITS } from "./constants.js";
+import { toPositiveInt } from "./parsers.js";
 
 /**
  * Contrato de entrada minimo por tela:
@@ -21,9 +22,7 @@ import { TECH_LIMITS } from "./constants.js";
  */
 export function buildCablingLayouts(screens = [], config = {}) {
   if (!Array.isArray(screens)) return [];
-  return screens.map((screen) =>
-    buildCablingLayoutFromScreen(screen, config),
-  );
+  return screens.map((screen) => buildCablingLayoutFromScreen(screen, config));
 }
 
 export function buildCablingLayoutFromScreen(screen, config = {}) {
@@ -39,12 +38,9 @@ export function buildCablingLayoutFromScreen(screen, config = {}) {
     1,
     Number(screen?.gabinete?.px_w || 0) * Number(screen?.gabinete?.px_h || 0),
   );
-  
+
   const roundingFn = overclock ? Math.ceil : Math.floor;
-  const maxGabsPerCable = Math.max(
-    1,
-    roundingFn(pixelsPerPort / pxPerGab),
-  );
+  const maxGabsPerCable = Math.max(1, roundingFn(pixelsPerPort / pxPerGab));
 
   const block = findBestBlock(cols, rows, maxGabsPerCable, cablingStrategy);
   const blocks = generateCablingBlocks(
@@ -95,7 +91,13 @@ export function findBestBlock(totalW, totalH, maxGabsPerCable, strategy) {
     for (let w = 1; w <= totalW; w++) {
       const h = Math.min(totalH, Math.floor(maxGabsPerCable / w));
       if (h === 0) continue;
-      const blocks = generateCablingBlocks(totalW, totalH, w, h, maxGabsPerCable);
+      const blocks = generateCablingBlocks(
+        totalW,
+        totalH,
+        w,
+        h,
+        maxGabsPerCable,
+      );
       const cables = blocks.length;
       if (cables < best.cables) {
         best = { w, h, cables, diff: Math.abs(w - h), area: w * h };
@@ -105,7 +107,13 @@ export function findBestBlock(totalW, totalH, maxGabsPerCable, strategy) {
     for (let h = 1; h <= totalH; h++) {
       const w = Math.min(totalW, Math.floor(maxGabsPerCable / h));
       if (w === 0) continue;
-      const blocks = generateCablingBlocks(totalW, totalH, w, h, maxGabsPerCable);
+      const blocks = generateCablingBlocks(
+        totalW,
+        totalH,
+        w,
+        h,
+        maxGabsPerCable,
+      );
       const cables = blocks.length;
       if (cables < best.cables) {
         best = { w, h, cables, diff: Math.abs(w - h), area: w * h };
@@ -118,7 +126,13 @@ export function findBestBlock(totalW, totalH, maxGabsPerCable, strategy) {
       h = Math.min(h, totalH);
       if (h < 1) continue;
 
-      const blocks = generateCablingBlocks(totalW, totalH, w, h, maxGabsPerCable);
+      const blocks = generateCablingBlocks(
+        totalW,
+        totalH,
+        w,
+        h,
+        maxGabsPerCable,
+      );
       const cables = blocks.length;
       const diff = Math.abs(w - h);
       const area = w * h;
@@ -206,9 +220,4 @@ export function splitHorizontalZone(
     blocks.push({ x: startX + x, y: startY, w, h: height });
     x += w;
   }
-}
-
-function toPositiveInt(value, fallback = 1) {
-  const parsed = Number.parseInt(value, 10);
-  return Number.isInteger(parsed) && parsed > 0 ? parsed : fallback;
 }

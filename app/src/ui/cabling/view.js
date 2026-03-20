@@ -1,4 +1,5 @@
 import { buildCablingLayouts } from "../../core/cabling.js";
+import { resolveCanvasLimits } from "../../core/platform.js";
 
 export function renderCablingView(params) {
   const {
@@ -27,6 +28,7 @@ export function renderCablingView(params) {
     uiState.cablingCanvasZoom,
     uiState.cablingCanvasPanX,
     uiState.cablingCanvasPanY,
+    refs.migrationStatus,
   );
 
   renderCablingSummary(
@@ -72,6 +74,7 @@ function renderCablingCanvas(
   zoom,
   panX,
   panY,
+  statusNode,
 ) {
   if (!(canvas instanceof HTMLCanvasElement)) return;
   const ctx = canvas.getContext("2d");
@@ -79,7 +82,18 @@ function renderCablingCanvas(
 
   const screen = screens.find((item) => item.id === selectedScreenId);
 
-  prepareCanvas(canvas, ctx);
+  const canvasPrep = prepareCanvas(canvas, ctx);
+  if (
+    canvasPrep.fallbackApplied &&
+    statusNode &&
+    canvas.dataset.memoryFallbackWarned !== "1"
+  ) {
+    canvas.dataset.memoryFallbackWarned = "1";
+    statusNode.textContent =
+      "Aviso: renderizacao do canvas reduzida automaticamente para manter estabilidade de memoria.";
+  } else if (!canvasPrep.fallbackApplied) {
+    canvas.dataset.memoryFallbackWarned = "0";
+  }
   const width = canvas.clientWidth;
   const height = canvas.clientHeight;
   ctx.clearRect(0, 0, width, height);
@@ -299,6 +313,8 @@ function renderCablingSummary(
 
   if (
     config.overclock &&
+    screen.gabinete?.px_w &&
+    screen.gabinete?.px_h &&
     gabsPerBlock >
       Math.floor(
         config.pixelsPerPort / (screen.gabinete.px_w * screen.gabinete.px_h),
@@ -387,16 +403,66 @@ function getCableColor(index) {
 }
 
 function prepareCanvas(canvas, ctx) {
-  const dpr = window.devicePixelRatio || 1;
+  const canvasLimits = resolveCanvasLimits();
+  const dpr = Math.max(1, window.devicePixelRatio || 1);
   const rect = canvas.getBoundingClientRect();
 
-  if (
-    canvas.width !== Math.floor(rect.width * dpr) ||
-    canvas.height !== Math.floor(rect.height * dpr)
-  ) {
-    canvas.width = Math.floor(rect.width * dpr);
-    canvas.height = Math.floor(rect.height * dpr);
+  if (!Number.isFinite(rect.width) || !Number.isFinite(rect.height)) {
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    return { fallbackApplied: false, renderScale: 1 };
   }
 
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  const area = Math.max(1, rect.width * rect.height);
+  const maxScaleByArea = Math.sqrt(canvasLimits.renderMaxPixels / area);
+  const preferredScale = Math.min(dpr, maxScaleByArea);
+  const minScale = Math.max(0.25, canvasLimits.minRenderScale);
+
+  const candidateScales = [preferredScale, 1, minScale]
+    .filter((value) => Number.isFinite(value) && value > 0)
+    .map((value) => Math.max(minScale, Math.min(dpr, value)));
+
+  let appliedScale = minScale;
+  let applied = false;
+
+  for (const candidate of candidateScales) {
+    const targetWidth = Math.max(1, Math.floor(rect.width * candidate));
+    const targetHeight = Math.max(1, Math.floor(rect.height * candidate));
+
+    if (targetWidth * targetHeight > canvasLimits.renderMaxPixels) {
+      continue;
+    }
+
+    try {
+      if (canvas.width !== targetWidth || canvas.height !== targetHeight) {
+        canvas.width = targetWidth;
+        canvas.height = targetHeight;
+      }
+      appliedScale = candidate;
+      applied = true;
+      break;
+    } catch {
+      // Try a smaller candidate on memory pressure.
+    }
+  }
+
+  if (!applied) {
+    const safeWidth = Math.max(1, Math.floor(rect.width * minScale));
+    const safeHeight = Math.max(1, Math.floor(rect.height * minScale));
+    try {
+      canvas.width = safeWidth;
+      canvas.height = safeHeight;
+      appliedScale = minScale;
+    } catch {
+      canvas.width = Math.max(1, Math.floor(rect.width));
+      canvas.height = Math.max(1, Math.floor(rect.height));
+      appliedScale = 1;
+    }
+  }
+
+  ctx.setTransform(appliedScale, 0, 0, appliedScale, 0, 0);
+
+  return {
+    fallbackApplied: appliedScale < dpr,
+    renderScale: appliedScale,
+  };
 }

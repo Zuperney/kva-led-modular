@@ -1,4 +1,5 @@
 import { DEFAULTS, SCHEMA_VERSION } from "./constants.js";
+import { toPositiveInt, toPositiveNumber } from "./parsers.js";
 import { validateProjectInput } from "./validators.js";
 
 export function createProjectV1(input = {}) {
@@ -60,8 +61,8 @@ export function migrateLegacyProjectData(legacyData) {
   const screens = telas.map((tela, index) => ({
     id: tela?.id ?? "legacy-" + (index + 1),
     nome: String(tela?.nome || "Tela " + (index + 1)),
-    quantidade_colunas: toPositiveInt(tela?.cols),
-    quantidade_linhas: toPositiveInt(tela?.rows),
+    quantidade_colunas: toPositiveInt(tela?.cols, 1),
+    quantidade_linhas: toPositiveInt(tela?.rows, 1),
     gabinete: { ...DEFAULTS.CABINET },
   }));
 
@@ -95,23 +96,17 @@ function normalizeScreens(screens) {
     nome: String(screen?.nome || "Tela " + (index + 1)),
     quantidade_colunas: toPositiveInt(
       screen?.quantidade_colunas ?? screen?.cols,
+      1,
     ),
-    quantidade_linhas: toPositiveInt(screen?.quantidade_linhas ?? screen?.rows),
+    quantidade_linhas: toPositiveInt(
+      screen?.quantidade_linhas ?? screen?.rows,
+      1,
+    ),
     gabinete: {
       ...DEFAULTS.CABINET,
       ...(screen?.gabinete || {}),
     },
   }));
-}
-
-function toPositiveInt(value, fallback = 1) {
-  const parsed = Number.parseInt(value, 10);
-  return Number.isInteger(parsed) && parsed > 0 ? parsed : fallback;
-}
-
-function toPositiveNumber(value, fallback) {
-  const parsed = Number.parseFloat(value);
-  return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
 }
 
 function toNonNegativeNumber(value, fallback) {
