@@ -2,7 +2,7 @@ export function createInitialUiState(state, params) {
   const { loadCabinetCatalog, loadElectricalSystemPreference } = params;
 
   return {
-    activeView: "cabling",
+    activeView: "home",
     selectedScreenId: state.screens[0]?.id || null,
     screenEditorId: null,
     cabinets: loadCabinetCatalog(state),
