@@ -1,4 +1,4 @@
-name: Deploy GitHub Pages (app/)
+name: Deploy GitHub Pages (root)
 
 on:
   push:
@@ -24,10 +24,10 @@ jobs:
       - name: Configure Pages
         uses: actions/configure-pages@v5
 
-      - name: Upload Pages artifact (from app/)
+      - name: Upload Pages artifact (from root)
         uses: actions/upload-pages-artifact@v4
         with:
-          path: ./app
+          path: ./
 
   deploy:
     runs-on: ubuntu-latest
