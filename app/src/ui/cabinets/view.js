@@ -24,11 +24,13 @@ function renderCabinetCards(container, cabinets, escapeHtml) {
         escapeHtml(cab.id) +
         '" aria-label="Editar gabinete" title="Editar">' +
         '<i data-lucide="square-pen" aria-hidden="true"></i>' +
+        '<span class="cabinet-action-label">Editar</span>' +
         "</button>" +
         '<button class="cabinet-action-btn cabinet-action-btn--delete" data-action="delete-cabinet" data-cabinet-id="' +
         escapeHtml(cab.id) +
         '" aria-label="Excluir gabinete" title="Excluir">' +
         '<i data-lucide="trash-2" aria-hidden="true"></i>' +
+        '<span class="cabinet-action-label">Remover</span>' +
         "</button>" +
         "</div>" +
         "</div>" +

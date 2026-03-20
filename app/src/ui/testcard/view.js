@@ -131,33 +131,6 @@ function syncTestCardControls(
   escapeHtml,
   formatInteger,
 ) {
-  if (refs.testCardScreen instanceof HTMLSelectElement) {
-    const optionsHtml = screens
-      .map((screen) => {
-        const selected =
-          String(screen.id) === String(uiState.testCardScreenId)
-            ? " selected"
-            : "";
-        return (
-          '<option value="' +
-          escapeHtml(String(screen.id)) +
-          '"' +
-          selected +
-          ">" +
-          escapeHtml(screen.nome) +
-          "</option>"
-        );
-      })
-      .join("");
-
-    refs.testCardScreen.innerHTML =
-      optionsHtml || '<option value="">Sem telas cadastradas</option>';
-
-    if (!optionsHtml) {
-      refs.testCardScreen.value = "";
-    }
-  }
-
   if (refs.testCardSelectedScreens instanceof HTMLElement) {
     const selectedIds = uiState.testCardUseAllScreens
       ? screens.map((screen) => String(screen.id))
@@ -198,7 +171,63 @@ function syncTestCardControls(
 
     refs.testCardSelectedScreens.innerHTML =
       chipsHtml ||
-      '<div class="notice" style="margin:0;">Nenhuma tela adicionada ao canvas. Selecione uma tela na biblioteca e clique em "Adicionar ao canvas".</div>';
+      '<div class="notice" style="margin:0;">Nenhuma tela adicionada ao canvas. Use "Adicionar/remover telas" para montar a composicao.</div>';
+  }
+
+  const manageScreensList = document.getElementById(
+    "testCardManageScreensList",
+  );
+  if (manageScreensList instanceof HTMLElement) {
+    const selectedIds = uiState.testCardUseAllScreens
+      ? screens.map((screen) => String(screen.id))
+      : Array.isArray(uiState.testCardCompositionIds)
+        ? uiState.testCardCompositionIds.map(String)
+        : [];
+    const selectedSet = new Set(selectedIds);
+
+    const manageHtml = screens
+      .map((screen, index) => {
+        const screenId = String(screen.id);
+        const inComposition = selectedSet.has(screenId);
+
+        return (
+          '<div class="testcard-manage-chip' +
+          (inComposition ? " is-in-composition" : "") +
+          '">' +
+          '<button type="button" class="testcard-manage-main" data-action="' +
+          (inComposition ? "noop" : "add-from-modal") +
+          '" data-screen-id="' +
+          escapeHtml(screenId) +
+          '" title="' +
+          (inComposition
+            ? "Tela ja esta na composicao"
+            : "Clique para adicionar") +
+          '">' +
+          '<span class="chip-order">' +
+          (index + 1) +
+          ".</span>" +
+          '<span class="chip-name">' +
+          escapeHtml(screen.nome) +
+          '<span class="chip-meta">' +
+          formatInteger(screen.pixels.largura) +
+          "x" +
+          formatInteger(screen.pixels.altura) +
+          " px</span>" +
+          "</span>" +
+          "</button>" +
+          (inComposition
+            ? '<button type="button" class="testcard-manage-remove" data-action="remove-from-modal" data-screen-id="' +
+              escapeHtml(screenId) +
+              '" title="Remover da composicao">x</button>'
+            : "") +
+          "</div>"
+        );
+      })
+      .join("");
+
+    manageScreensList.innerHTML =
+      manageHtml ||
+      '<div class="notice" style="margin:0;">Nenhuma tela cadastrada no projeto.</div>';
   }
 
   if (refs.testCardPreset instanceof HTMLSelectElement) {
@@ -207,16 +236,48 @@ function syncTestCardControls(
   if (refs.testCardUseAllScreens instanceof HTMLInputElement) {
     refs.testCardUseAllScreens.checked = Boolean(uiState.testCardUseAllScreens);
   }
-  if (refs.testCardLayout instanceof HTMLSelectElement) {
-    refs.testCardLayout.value = uiState.testCardLayout || "horizontal";
+  const testCardLayoutMenuUseAll = document.getElementById(
+    "testCardLayoutMenuUseAll",
+  );
+  if (testCardLayoutMenuUseAll instanceof HTMLInputElement) {
+    testCardLayoutMenuUseAll.checked = Boolean(uiState.testCardUseAllScreens);
+  }
+  const testCardLayoutQuick = document.getElementById("testCardLayoutQuick");
+  if (testCardLayoutQuick instanceof HTMLElement) {
+    const currentLayout = String(uiState.testCardLayout || "horizontal");
+    testCardLayoutQuick
+      .querySelectorAll("button[data-layout-value]")
+      .forEach((node) => {
+        if (!(node instanceof HTMLButtonElement)) return;
+        node.classList.toggle(
+          "is-active",
+          String(node.dataset.layoutValue || "") === currentLayout,
+        );
+      });
   }
   if (refs.testCardGapPx instanceof HTMLInputElement) {
     refs.testCardGapPx.value = String(
       Math.max(0, Number(uiState.testCardGapPx) || 0),
     );
   }
+  const testCardLayoutMenuGapPx = document.getElementById(
+    "testCardLayoutMenuGapPx",
+  );
+  if (testCardLayoutMenuGapPx instanceof HTMLInputElement) {
+    testCardLayoutMenuGapPx.value = String(
+      Math.max(0, Number(uiState.testCardGapPx) || 0),
+    );
+  }
   if (refs.testCardGridCols instanceof HTMLInputElement) {
     refs.testCardGridCols.value = String(
+      Math.max(1, Number(uiState.testCardGridCols) || 1),
+    );
+  }
+  const testCardLayoutMenuGridCols = document.getElementById(
+    "testCardLayoutMenuGridCols",
+  );
+  if (testCardLayoutMenuGridCols instanceof HTMLInputElement) {
+    testCardLayoutMenuGridCols.value = String(
       Math.max(1, Number(uiState.testCardGridCols) || 1),
     );
   }
@@ -246,6 +307,42 @@ function syncTestCardControls(
   }
   if (refs.testCardShowTargets instanceof HTMLInputElement) {
     refs.testCardShowTargets.checked = uiState.testCardShowTargets !== false;
+  }
+
+  // Sync style submenu toggle icons
+  const testCardStyleSubmenu = document.getElementById("testCardStyleSubmenu");
+  if (testCardStyleSubmenu instanceof HTMLElement) {
+    const toggleMap = {
+      testCardShowGrid: "btnTestCardShowGrid",
+      testCardShowCabling: "btnTestCardShowCabling",
+      testCardShowNames: "btnTestCardShowNames",
+      testCardShowTargets: "btnTestCardShowTargets",
+    };
+
+    Object.entries(toggleMap).forEach(([uiKey, btnId]) => {
+      const btn = document.getElementById(btnId);
+      const isChecked = uiState[uiKey] !== false;
+      if (btn instanceof HTMLButtonElement) {
+        btn.setAttribute("aria-pressed", isChecked ? "true" : "false");
+        btn.classList.toggle("is-active", isChecked);
+      }
+    });
+
+    // Sync color swatches in submenu
+    const colorPalettes = testCardStyleSubmenu.querySelectorAll(
+      "[data-color-palette]",
+    );
+    colorPalettes.forEach((palette) => {
+      const paletteId = palette.dataset.colorPalette || "";
+      const colorStateMap = {
+        testCardBg: uiState.testCardBg || "#0f172a",
+        testCardFg: uiState.testCardFg || "#e5e7eb",
+        testCardAccent: uiState.testCardAccent || "#22d3ee",
+      };
+      const selectedColor = colorStateMap[paletteId];
+      if (!selectedColor) return;
+      syncPaletteSelection(paletteId, selectedColor);
+    });
   }
 
   // Sync manual position inputs for the active panel

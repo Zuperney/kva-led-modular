@@ -18,6 +18,20 @@ export function bindCabinetEvents(params) {
 
   let editingCabinetId = null;
 
+  function updateAddCabinetButton(label) {
+    const button = refs.btnAddCabinet;
+    if (!(button instanceof HTMLButtonElement)) return;
+
+    const textNode = button.querySelector("span");
+    if (textNode) {
+      textNode.textContent = label;
+    } else {
+      button.textContent = label;
+    }
+
+    button.setAttribute("aria-label", label + " gabinete");
+  }
+
   function setCabinetFormFromRecord(cabinet) {
     if (!cabinet) return;
     if (refs.cabNome) refs.cabNome.value = String(cabinet.nome || "");
@@ -33,17 +47,13 @@ export function bindCabinetEvents(params) {
 
   function resetCabinetEditMode() {
     editingCabinetId = null;
-    if (refs.btnAddCabinet) {
-      refs.btnAddCabinet.textContent = "Cadastrar";
-    }
+    updateAddCabinetButton("Cadastrar");
   }
 
   function enableCabinetEditMode(cabinet) {
     editingCabinetId = cabinet?.id || null;
     setCabinetFormFromRecord(cabinet);
-    if (refs.btnAddCabinet) {
-      refs.btnAddCabinet.textContent = "Salvar";
-    }
+    updateAddCabinetButton("Salvar");
   }
 
   refs.btnImportCabinets?.addEventListener("click", () => {

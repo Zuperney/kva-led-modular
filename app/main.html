@@ -161,9 +161,15 @@
 
         <section class="view-pane" data-view-pane="cabinets">
           <h2>Catalogo de Gabinetes</h2>
-          <div class="actions">
-            <button id="btnImportCabinets" class="btn-primary" type="button">Importar TXT/CSV/JSON</button>
-            <button id="btnAddCabinet" class="btn-secondary" type="button">Cadastrar</button>
+          <div class="actions cabinet-quick-actions">
+            <button id="btnImportCabinets" class="btn-primary btn-action" type="button" aria-label="Importar gabinetes">
+              <i data-lucide="upload" aria-hidden="true"></i>
+              <span>Importar TXT/CSV/JSON</span>
+            </button>
+            <button id="btnAddCabinet" class="btn-secondary btn-action" type="button" aria-label="Cadastrar gabinete">
+              <i data-lucide="plus-square" aria-hidden="true"></i>
+              <span>Cadastrar</span>
+            </button>
           </div>
           <input id="importCabinetInput" type="file" accept=".txt,.csv,.json,text/plain,application/json" hidden>
 
@@ -252,54 +258,161 @@
 
         <section class="view-pane" data-view-pane="testcard">
           <h2>Test Card</h2>
-          <div class="notice">
+          <div class="notice testcard-notice">
             Gere um test card customizado e exporte em PNG ou PDF para validacao de painel.
           </div>
 
-          <div class="testcard-controls">
-            <div class="form-grid-two">
-              <div class="config-field">
-                <label for="testCardScreen">Biblioteca de telas</label>
-                <select id="testCardScreen" class="screen-select"></select>
+          <div class="testcard-mobile-priority-bar" role="group" aria-label="Menu de prioridades do Test Card">
+            <button id="btnOpenTestCardPriorityMenu" class="btn-secondary btn-action" type="button" aria-label="Abrir menu do Test Card">
+              <i data-lucide="list-filter" aria-hidden="true"></i>
+              <span>Menu Test Card</span>
+            </button>
+          </div>
+
+          <div id="testCardPriorityModal" class="modal-backdrop" hidden>
+            <div class="modal-card testcard-priority-modal" role="dialog" aria-modal="true" aria-labelledby="testCardPriorityTitle">
+              <div class="modal-head">
+                <h3 id="testCardPriorityTitle">Prioridades do Test Card</h3>
+                <button id="btnCloseTestCardPriorityMenu" class="btn-icon" type="button" aria-label="Fechar menu de prioridades">
+                  <i data-lucide="x" aria-hidden="true"></i>
+                </button>
               </div>
-              <div class="actions" style="margin-bottom: 0;">
-                <button id="btnAddTestCardScreen" class="btn-secondary" type="button">Adicionar ao canvas</button>
-                <button id="btnClearTestCardScreens" class="btn-secondary" type="button">Limpar composicao</button>
+              <div class="testcard-priority-grid">
+                <button class="btn-secondary testcard-priority-btn" type="button" data-testcard-priority="layout" aria-label="Prioridade Layout" title="Layout">
+                  <i data-lucide="layout-dashboard" aria-hidden="true"></i>
+                </button>
+                <button class="btn-secondary testcard-priority-btn" type="button" data-testcard-priority="style" aria-label="Prioridade Estilo" title="Estilo">
+                  <i data-lucide="palette" aria-hidden="true"></i>
+                </button>
+                <button class="btn-secondary testcard-priority-btn" type="button" data-testcard-priority="export" aria-label="Prioridade Exportacao" title="Exportacao">
+                  <i data-lucide="file-output" aria-hidden="true"></i>
+                </button>
+              </div>
+              <div id="testCardLayoutSubmenu" class="testcard-layout-submenu" hidden>
+                <h4>Layout</h4>
+                <div class="testcard-layout-submenu-grid">
+                  <div class="config-field">
+                    <label for="testCardLayoutMenuGapPx">Espacamento entre telas (px)</label>
+                    <input id="testCardLayoutMenuGapPx" class="screen-input" type="number" min="0" step="1" value="0">
+                  </div>
+                  <div class="config-field">
+                    <label for="testCardLayoutMenuGridCols">Colunas na grade</label>
+                    <input id="testCardLayoutMenuGridCols" class="screen-input" type="number" min="1" step="1" value="2">
+                  </div>
+                </div>
+                <label class="testcard-toggle" for="testCardLayoutMenuUseAll">
+                  <input id="testCardLayoutMenuUseAll" type="checkbox" checked>
+                  Iniciar com todas as telas
+                </label>
+                <div class="modal-actions">
+                  <button id="btnCloseTestCardLayoutSubmenu" class="btn-secondary" type="button">Fechar Layout</button>
+                </div>
+              </div>
+              <div id="testCardStyleSubmenu" class="testcard-style-submenu" hidden>
+                <h4>Estilos &amp; Visualizacao</h4>
+                <div class="testcard-style-colors">
+                  <div>
+                    <label class="testcard-style-label">Fundo</label>
+                    <div class="testcard-color-grid-compact" data-color-palette="testCardBg">
+                      <button type="button" class="testcard-color-swatch" data-color="#0f172a" style="--swatch:#0f172a" title="Azul noturno"></button>
+                      <button type="button" class="testcard-color-swatch" data-color="#1e293b" style="--swatch:#1e293b" title="Slate"></button>
+                      <button type="button" class="testcard-color-swatch" data-color="#111827" style="--swatch:#111827" title="Carbon"></button>
+                      <button type="button" class="testcard-color-swatch" data-color="#3f3f46" style="--swatch:#3f3f46" title="Grafite"></button>
+                      <button type="button" class="testcard-color-swatch" data-color="#0b3b2e" style="--swatch:#0b3b2e" title="Verde escuro"></button>
+                    </div>
+                  </div>
+                  <div>
+                    <label class="testcard-style-label">Principal</label>
+                    <div class="testcard-color-grid-compact" data-color-palette="testCardFg">
+                      <button type="button" class="testcard-color-swatch" data-color="#e5e7eb" style="--swatch:#e5e7eb" title="Cinza claro"></button>
+                      <button type="button" class="testcard-color-swatch" data-color="#ffffff" style="--swatch:#ffffff" title="Branco"></button>
+                      <button type="button" class="testcard-color-swatch" data-color="#fef3c7" style="--swatch:#fef3c7" title="Creme"></button>
+                      <button type="button" class="testcard-color-swatch" data-color="#cbd5e1" style="--swatch:#cbd5e1" title="Prata"></button>
+                      <button type="button" class="testcard-color-swatch" data-color="#93c5fd" style="--swatch:#93c5fd" title="Azul claro"></button>
+                    </div>
+                  </div>
+                  <div>
+                    <label class="testcard-style-label">Destaque</label>
+                    <div class="testcard-color-grid-compact" data-color-palette="testCardAccent">
+                      <button type="button" class="testcard-color-swatch" data-color="#22d3ee" style="--swatch:#22d3ee" title="Ciano"></button>
+                      <button type="button" class="testcard-color-swatch" data-color="#f97316" style="--swatch:#f97316" title="Laranja"></button>
+                      <button type="button" class="testcard-color-swatch" data-color="#ef4444" style="--swatch:#ef4444" title="Vermelho"></button>
+                      <button type="button" class="testcard-color-swatch" data-color="#22c55e" style="--swatch:#22c55e" title="Verde"></button>
+                      <button type="button" class="testcard-color-swatch" data-color="#a78bfa" style="--swatch:#a78bfa" title="Violeta"></button>
+                    </div>
+                  </div>
+                </div>
+                <div class="testcard-style-toggles">
+                  <button type="button" class="testcard-toggle-icon" id="btnTestCardShowGrid" data-toggle="testCardShowGrid" title="Exibir grade auxiliar" aria-label="Grade auxiliar" aria-pressed="true">
+                    <i data-lucide="grid-3x3" aria-hidden="true"></i>
+                  </button>
+                  <button type="button" class="testcard-toggle-icon" id="btnTestCardShowCabling" data-toggle="testCardShowCabling" title="Mostrar cabeamento" aria-label="Cabeamento" aria-pressed="false">
+                    <i data-lucide="cable" aria-hidden="true"></i>
+                  </button>
+                  <button type="button" class="testcard-toggle-icon" id="btnTestCardShowNames" data-toggle="testCardShowNames" title="Mostrar nomes das telas" aria-label="Nomes das telas" aria-pressed="true">
+                    <i data-lucide="type" aria-hidden="true"></i>
+                  </button>
+                  <button type="button" class="testcard-toggle-icon" id="btnTestCardShowTargets" data-toggle="testCardShowTargets" title="Mostrar miras" aria-label="Circulos de mira" aria-pressed="true">
+                    <i data-lucide="target" aria-hidden="true"></i>
+                  </button>
+                </div>
+                <div class="modal-actions">
+                  <button id="btnCloseTestCardStyleSubmenu" class="btn-secondary" type="button">Fechar Estilos</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="testcard-controls">
+            <div class="form-grid-two" data-testcard-priority-group="essential">
+              <div class="config-field">
+                <label>Biblioteca de telas</label>
+                <button id="btnOpenTestCardManageScreens" class="btn-secondary testcard-manage-trigger" type="button">
+                  Adicionar/remover telas
+                </button>
               </div>
             </div>
 
-            <div class="config-field">
+            <div id="testCardCompositionListBlock" class="config-field" data-testcard-priority-group="essential">
               <label for="testCardSelectedScreens">Telas na composicao (clique para selecionar, x para remover)</label>
               <div id="testCardSelectedScreens" class="testcard-screen-list"></div>
             </div>
 
-            <div class="form-grid-two">
-              <div class="config-field">
-                <label for="testCardLayout">Auto-organizacao inicial</label>
-                <select id="testCardLayout" class="screen-select">
-                  <option value="horizontal">Horizontal</option>
-                  <option value="vertical">Vertical</option>
-                  <option value="grid">Grade</option>
-                </select>
-              </div>
-              <label class="testcard-toggle" for="testCardUseAllScreens">
-                <input id="testCardUseAllScreens" type="checkbox" checked>
-                Iniciar com todas as telas
-              </label>
-            </div>
-
-            <div class="form-grid-two">
-              <div class="config-field">
-                <label for="testCardGapPx">Espacamento entre telas (px)</label>
-                <input id="testCardGapPx" class="screen-input" type="number" min="0" step="1" value="0">
-              </div>
-              <div class="config-field">
-                <label for="testCardGridCols">Colunas na grade (quando layout = grade)</label>
-                <input id="testCardGridCols" class="screen-input" type="number" min="1" step="1" value="2">
+            <div id="testCardManageScreensModal" class="modal-backdrop" hidden>
+              <div class="modal-card testcard-manage-modal" role="dialog" aria-modal="true" aria-labelledby="testCardManageScreensTitle">
+                <div class="modal-head">
+                  <h3 id="testCardManageScreensTitle">Gerenciar telas da composicao</h3>
+                  <button id="btnCloseTestCardManageScreens" class="btn-icon" type="button" aria-label="Fechar gerenciador de telas">
+                    <i data-lucide="x" aria-hidden="true"></i>
+                  </button>
+                </div>
+                <p class="config-hint">Telas opacas ja estao na composicao. Use o X para remover.</p>
+                <div id="testCardManageScreensList" class="testcard-manage-list"></div>
+                <div class="modal-actions">
+                  <button id="btnClearTestCardScreensModal" class="btn-secondary" type="button">Limpar composicao</button>
+                </div>
               </div>
             </div>
 
-            <div class="form-grid-two">
+            <div class="config-field" data-testcard-priority-group="layout">
+              <label>Auto-organizacao inicial</label>
+              <div class="testcard-layout-icons" id="testCardLayoutQuick" role="group" aria-label="Selecionar auto-organizacao">
+                <button type="button" class="testcard-layout-btn" data-layout-value="grid" title="Grade" aria-label="Grade">
+                  <i data-lucide="layout-dashboard" aria-hidden="true"></i>
+                </button>
+                <button type="button" class="testcard-layout-btn" data-layout-value="vertical" title="Vertical" aria-label="Vertical">
+                  <i data-lucide="between-horizontal-start" aria-hidden="true"></i>
+                </button>
+                <button type="button" class="testcard-layout-btn" data-layout-value="horizontal" title="Horizontal" aria-label="Horizontal">
+                  <i data-lucide="between-vertical-end" aria-hidden="true"></i>
+                </button>
+                <button id="btnAutoAlignTestCard" type="button" class="testcard-layout-btn" title="Auto-alinhar (reset posicoes)" aria-label="Auto-alinhar">
+                  <i data-lucide="move" aria-hidden="true"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="form-grid-two" data-testcard-priority-group="layout">
               <div class="config-field">
                 <label for="testCardPosX">Posicao X — tela ativa (px)</label>
                 <input id="testCardPosX" class="screen-input" type="number" min="0" step="1" value="0">
@@ -310,11 +423,7 @@
               </div>
             </div>
 
-            <div class="actions">
-              <button id="btnAutoAlignTestCard" class="btn-secondary" type="button">Auto-alinhar (reset posicoes)</button>
-            </div>
-
-            <div class="actions">
+            <div class="actions" data-testcard-priority-group="export">
               <button id="btnExportTestCardPng" class="btn-primary" type="button">Exportar PNG</button>
               <button id="btnExportTestCardPdf" class="btn-secondary" type="button">Exportar PDF</button>
             </div>
@@ -463,17 +572,21 @@
           <div class="canvas-grid-cabling">
             <article class="canvas-card">
               <h3>Cabeamento (estimado)</h3>
-              <div id="cablingSummary" class="cabling-summary"></div>
-              <div class="canvas-controls">
-                <button id="btnZoomIn" class="btn-icon" title="Aproximar" aria-label="Aproximar">
-                  <i data-lucide="zoom-in" aria-hidden="true"></i>
-                </button>
-                <button id="btnZoomOut" class="btn-icon" title="Afastar" aria-label="Afastar">
-                  <i data-lucide="zoom-out" aria-hidden="true"></i>
-                </button>
-                <button id="btnZoomReset" class="btn-icon" title="Resetar zoom">100%</button>
+              <div class="canvas-stage canvas-stage-cabling">
+                <div class="canvas-controls canvas-controls--overlay" role="group" aria-label="Controles de zoom do canvas">
+                  <button id="btnZoomIn" class="btn-icon" type="button" title="Aproximar" aria-label="Aproximar">
+                    <i data-lucide="zoom-in" aria-hidden="true"></i>
+                  </button>
+                  <button id="btnZoomOut" class="btn-icon" type="button" title="Afastar" aria-label="Afastar">
+                    <i data-lucide="zoom-out" aria-hidden="true"></i>
+                  </button>
+                  <button id="btnZoomReset" class="btn-icon" type="button" title="Resetar zoom" aria-label="Resetar zoom">
+                    <i data-lucide="rotate-ccw" aria-hidden="true"></i>
+                  </button>
+                </div>
+                <canvas id="cablingCanvas" width="900" height="400"></canvas>
               </div>
-              <canvas id="cablingCanvas" width="900" height="400"></canvas>
+              <div id="cablingSummary" class="cabling-summary"></div>
             </article>
             <div class="screen-list-cabling">
               <h3>Telas</h3>
@@ -485,7 +598,7 @@
         <section class="view-pane" data-view-pane="testcard">
           <h2>Preview do Test Card</h2>
           <article class="canvas-card">
-            <section class="testcard-style-panel">
+            <section class="testcard-style-panel" data-testcard-priority-group="style">
               <h3>Estilizacao do Test Card</h3>
               <div class="form-grid-two">
                 <div class="config-field">
@@ -501,76 +614,6 @@
                   <label for="testCardTitle">Titulo</label>
                   <input id="testCardTitle" class="screen-input" type="text" value="LED TEST CARD" maxlength="60">
                 </div>
-              </div>
-
-              <div class="form-grid-two">
-                <div class="config-field">
-                  <label for="testCardBg">Cor fundo</label>
-                  <div class="testcard-color-grid" data-color-palette="testCardBg">
-                    <button type="button" class="testcard-color-swatch" data-color="#0f172a" style="--swatch:#0f172a" title="Azul noturno"></button>
-                    <button type="button" class="testcard-color-swatch" data-color="#1e293b" style="--swatch:#1e293b" title="Slate"></button>
-                    <button type="button" class="testcard-color-swatch" data-color="#111827" style="--swatch:#111827" title="Carbon"></button>
-                    <button type="button" class="testcard-color-swatch" data-color="#3f3f46" style="--swatch:#3f3f46" title="Grafite"></button>
-                    <button type="button" class="testcard-color-swatch" data-color="#0b3b2e" style="--swatch:#0b3b2e" title="Verde escuro"></button>
-                    <button type="button" class="testcard-color-picker" data-action="open-color" data-input-id="testCardBg" title="Conta-gotas" aria-label="Conta-gotas">
-                      <i data-lucide="pipette" aria-hidden="true"></i>
-                    </button>
-                  </div>
-                  <input id="testCardBg" class="screen-input testcard-color-input-native" type="color" value="#0f172a">
-                </div>
-                <div class="config-field">
-                  <label for="testCardFg">Cor principal</label>
-                  <div class="testcard-color-grid" data-color-palette="testCardFg">
-                    <button type="button" class="testcard-color-swatch" data-color="#e5e7eb" style="--swatch:#e5e7eb" title="Cinza claro"></button>
-                    <button type="button" class="testcard-color-swatch" data-color="#ffffff" style="--swatch:#ffffff" title="Branco"></button>
-                    <button type="button" class="testcard-color-swatch" data-color="#fef3c7" style="--swatch:#fef3c7" title="Creme"></button>
-                    <button type="button" class="testcard-color-swatch" data-color="#cbd5e1" style="--swatch:#cbd5e1" title="Prata"></button>
-                    <button type="button" class="testcard-color-swatch" data-color="#93c5fd" style="--swatch:#93c5fd" title="Azul claro"></button>
-                    <button type="button" class="testcard-color-picker" data-action="open-color" data-input-id="testCardFg" title="Conta-gotas" aria-label="Conta-gotas">
-                      <i data-lucide="pipette" aria-hidden="true"></i>
-                    </button>
-                  </div>
-                  <input id="testCardFg" class="screen-input testcard-color-input-native" type="color" value="#e5e7eb">
-                </div>
-              </div>
-
-              <div class="form-grid-two">
-                <div class="config-field">
-                  <label for="testCardAccent">Cor destaque</label>
-                  <div class="testcard-color-grid" data-color-palette="testCardAccent">
-                    <button type="button" class="testcard-color-swatch" data-color="#22d3ee" style="--swatch:#22d3ee" title="Ciano"></button>
-                    <button type="button" class="testcard-color-swatch" data-color="#f97316" style="--swatch:#f97316" title="Laranja"></button>
-                    <button type="button" class="testcard-color-swatch" data-color="#ef4444" style="--swatch:#ef4444" title="Vermelho"></button>
-                    <button type="button" class="testcard-color-swatch" data-color="#22c55e" style="--swatch:#22c55e" title="Verde"></button>
-                    <button type="button" class="testcard-color-swatch" data-color="#a78bfa" style="--swatch:#a78bfa" title="Violeta"></button>
-                    <button type="button" class="testcard-color-picker" data-action="open-color" data-input-id="testCardAccent" title="Conta-gotas" aria-label="Conta-gotas">
-                      <i data-lucide="pipette" aria-hidden="true"></i>
-                    </button>
-                  </div>
-                  <input id="testCardAccent" class="screen-input testcard-color-input-native" type="color" value="#22d3ee">
-                </div>
-                <label class="testcard-toggle" for="testCardShowGrid">
-                  <input id="testCardShowGrid" type="checkbox" checked>
-                  Exibir grade auxiliar
-                </label>
-              </div>
-
-              <div class="form-grid-two">
-                <label class="testcard-toggle" for="testCardShowCabling">
-                  <input id="testCardShowCabling" type="checkbox">
-                  Mostrar cabeamento dentro das telas
-                </label>
-                <label class="testcard-toggle" for="testCardShowNames">
-                  <input id="testCardShowNames" type="checkbox" checked>
-                  Mostrar nomes das telas
-                </label>
-              </div>
-
-              <div class="form-grid-two">
-                <label class="testcard-toggle" for="testCardShowTargets">
-                  <input id="testCardShowTargets" type="checkbox" checked>
-                  Mostrar circulos e X de mira
-                </label>
               </div>
             </section>
 

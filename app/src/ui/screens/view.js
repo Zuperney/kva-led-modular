@@ -35,14 +35,26 @@ export function renderScreensView(params) {
         "</span>" +
         "</div>" +
         '<div class="screen-item-actions">' +
-        '<button class="btn-ghost btn-screen-action" data-action="toggle-edit" data-screen-id="' +
+        '<button class="cabinet-action-btn cabinet-action-btn--edit btn-screen-action" data-action="toggle-edit" data-screen-id="' +
         String(screen.id) +
-        '">' +
+        '" aria-label="' +
+        (isEditing ? "Concluir edicao da tela" : "Editar tela") +
+        '" title="' +
         (isEditing ? "Concluir" : "Editar") +
+        '">' +
+        '<i data-lucide="' +
+        (isEditing ? "check" : "square-pen") +
+        '" aria-hidden="true"></i>' +
+        '<span class="cabinet-action-label">' +
+        (isEditing ? "Concluir" : "Editar") +
+        "</span>" +
         "</button>" +
-        '<button class="btn-delete" data-action="delete" data-screen-id="' +
+        '<button class="cabinet-action-btn cabinet-action-btn--delete btn-screen-action" data-action="delete" data-screen-id="' +
         String(screen.id) +
-        '">Remover</button>' +
+        '" aria-label="Remover tela" title="Remover">' +
+        '<i data-lucide="trash-2" aria-hidden="true"></i>' +
+        '<span class="cabinet-action-label">Remover</span>' +
+        "</button>" +
         "</div>" +
         "</div>" +
         (isEditing

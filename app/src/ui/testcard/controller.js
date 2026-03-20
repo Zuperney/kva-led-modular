@@ -9,27 +9,221 @@ export function bindTestCardEvents(params) {
   const { refs, getState, getUi, setUi, computeProject, exportTestCard } =
     params;
 
-  refs.testCardScreen?.addEventListener("change", (event) => {
-    const target = event.target;
-    if (!(target instanceof HTMLSelectElement)) return;
-    setUi({ testCardScreenId: target.value || null });
+  const testCardPriorityModal = document.getElementById(
+    "testCardPriorityModal",
+  );
+  const btnOpenTestCardPriorityMenu = document.getElementById(
+    "btnOpenTestCardPriorityMenu",
+  );
+  const btnCloseTestCardPriorityMenu = document.getElementById(
+    "btnCloseTestCardPriorityMenu",
+  );
+  const testCardPriorityButtons = testCardPriorityModal?.querySelectorAll(
+    "[data-testcard-priority]",
+  );
+  const testCardLayoutSubmenu = document.getElementById(
+    "testCardLayoutSubmenu",
+  );
+  const btnCloseTestCardLayoutSubmenu = document.getElementById(
+    "btnCloseTestCardLayoutSubmenu",
+  );
+  const testCardLayoutMenuGapPx = document.getElementById(
+    "testCardLayoutMenuGapPx",
+  );
+  const testCardLayoutMenuGridCols = document.getElementById(
+    "testCardLayoutMenuGridCols",
+  );
+  const testCardLayoutMenuUseAll = document.getElementById(
+    "testCardLayoutMenuUseAll",
+  );
+  const testCardStyleSubmenu = document.getElementById("testCardStyleSubmenu");
+  const btnCloseTestCardStyleSubmenu = document.getElementById(
+    "btnCloseTestCardStyleSubmenu",
+  );
+  const testCardStyleColorSwatches = testCardStyleSubmenu?.querySelectorAll(
+    ".testcard-color-swatch",
+  );
+  const testCardStyleToggleIcons = testCardStyleSubmenu?.querySelectorAll(
+    ".testcard-toggle-icon",
+  );
+  const testCardManageScreensModal = document.getElementById(
+    "testCardManageScreensModal",
+  );
+  const btnOpenTestCardManageScreens = document.getElementById(
+    "btnOpenTestCardManageScreens",
+  );
+  const btnCloseTestCardManageScreens = document.getElementById(
+    "btnCloseTestCardManageScreens",
+  );
+  const btnClearTestCardScreensModal = document.getElementById(
+    "btnClearTestCardScreensModal",
+  );
+  const testCardLayoutQuick = document.getElementById("testCardLayoutQuick");
+  const isMobileViewport = window.matchMedia("(max-width: 980px)");
+
+  const setTestCardPriority = (priority) => {
+    if (!priority || priority === "all") {
+      delete document.body.dataset.testcardPriority;
+      return;
+    }
+    document.body.dataset.testcardPriority = priority;
+  };
+
+  const syncTestCardPriorityByViewport = () => {
+    if (!isMobileViewport.matches) {
+      delete document.body.dataset.testcardPriority;
+      return;
+    }
+
+    if (!document.body.dataset.testcardPriority) {
+      document.body.dataset.testcardPriority = "layout";
+    }
+  };
+
+  const closeTestCardPriorityModal = () => {
+    if (testCardPriorityModal instanceof HTMLElement) {
+      testCardPriorityModal.setAttribute("hidden", "");
+    }
+    if (testCardLayoutSubmenu instanceof HTMLElement) {
+      testCardLayoutSubmenu.setAttribute("hidden", "");
+    }
+    if (testCardStyleSubmenu instanceof HTMLElement) {
+      testCardStyleSubmenu.setAttribute("hidden", "");
+    }
+  };
+
+  const openTestCardLayoutSubmenu = () => {
+    if (!(testCardLayoutSubmenu instanceof HTMLElement)) return;
+    testCardLayoutSubmenu.removeAttribute("hidden");
+    if (testCardStyleSubmenu instanceof HTMLElement) {
+      testCardStyleSubmenu.setAttribute("hidden", "");
+    }
+  };
+
+  const openTestCardStyleSubmenu = () => {
+    if (!(testCardStyleSubmenu instanceof HTMLElement)) return;
+    testCardStyleSubmenu.removeAttribute("hidden");
+    if (testCardLayoutSubmenu instanceof HTMLElement) {
+      testCardLayoutSubmenu.setAttribute("hidden", "");
+    }
+  };
+
+  const closeTestCardManageScreensModal = () => {
+    if (testCardManageScreensModal instanceof HTMLElement) {
+      testCardManageScreensModal.setAttribute("hidden", "");
+    }
+  };
+
+  btnOpenTestCardPriorityMenu?.addEventListener("click", () => {
+    if (!(testCardPriorityModal instanceof HTMLElement)) return;
+    closeTestCardManageScreensModal();
+    testCardPriorityModal.removeAttribute("hidden");
   });
 
-  refs.btnAddTestCardScreen?.addEventListener("click", () => {
-    const ui = getUi();
-    const selectedId = String(ui.testCardScreenId || "");
-    if (!selectedId) return;
+  btnCloseTestCardPriorityMenu?.addEventListener("click", () => {
+    closeTestCardPriorityModal();
+  });
 
-    const currentIds = Array.isArray(ui.testCardCompositionIds)
+  testCardPriorityModal?.addEventListener("click", (event) => {
+    if (event.target === testCardPriorityModal) {
+      closeTestCardPriorityModal();
+    }
+  });
+
+  testCardPriorityButtons?.forEach((button) => {
+    if (!(button instanceof HTMLButtonElement)) return;
+    button.addEventListener("click", () => {
+      const priority = button.dataset.testcardPriority || "layout";
+      setTestCardPriority(priority);
+      if (priority === "layout") {
+        openTestCardLayoutSubmenu();
+        return;
+      }
+      if (priority === "style") {
+        openTestCardStyleSubmenu();
+        return;
+      }
+      closeTestCardPriorityModal();
+    });
+  });
+
+  btnCloseTestCardLayoutSubmenu?.addEventListener("click", () => {
+    closeTestCardPriorityModal();
+  });
+
+  btnCloseTestCardStyleSubmenu?.addEventListener("click", () => {
+    closeTestCardPriorityModal();
+  });
+
+  testCardStyleColorSwatches?.forEach((swatch) => {
+    if (!(swatch instanceof HTMLButtonElement)) return;
+    swatch.addEventListener("click", () => {
+      const palette = swatch.closest("[data-color-palette]");
+      const paletteName = palette?.dataset.colorPalette || "";
+      const colorValue = swatch.dataset.color || "";
+      if (!paletteName || !colorValue) return;
+
+      const colorKeyMap = {
+        testCardBg: "testCardBg",
+        testCardFg: "testCardFg",
+        testCardAccent: "testCardAccent",
+      };
+      const uiKey = colorKeyMap[paletteName];
+      if (!uiKey) return;
+      setUi({ [uiKey]: colorValue });
+    });
+  });
+
+  testCardStyleToggleIcons?.forEach((icon) => {
+    if (!(icon instanceof HTMLButtonElement)) return;
+    icon.addEventListener("click", () => {
+      const toggleName = icon.dataset.toggle || "";
+      const toggleKeyMap = {
+        testCardShowGrid: "testCardShowGrid",
+        testCardShowCabling: "testCardShowCabling",
+        testCardShowNames: "testCardShowNames",
+        testCardShowTargets: "testCardShowTargets",
+      };
+      const uiKey = toggleKeyMap[toggleName];
+      if (!uiKey) return;
+
+      const current = Boolean(getUi()[uiKey]);
+      const next = !current;
+      setUi({ [uiKey]: next });
+      icon.setAttribute("aria-pressed", next ? "true" : "false");
+    });
+  });
+
+  isMobileViewport.addEventListener("change", syncTestCardPriorityByViewport);
+  syncTestCardPriorityByViewport();
+
+  const getCurrentCompositionIds = () => {
+    const ui = getUi();
+    if (ui.testCardUseAllScreens) {
+      return getState().screens.map((screen) => String(screen.id));
+    }
+    return Array.isArray(ui.testCardCompositionIds)
       ? ui.testCardCompositionIds.map(String)
       : [];
+  };
+
+  const addScreenToComposition = (screenId) => {
+    const selectedId = String(screenId || "");
+    if (!selectedId) return;
+
+    const ui = getUi();
+    const currentIds = getCurrentCompositionIds();
     if (currentIds.includes(selectedId)) return;
 
     const result = computeProject({
       config: getState().config,
       screens: getState().screens,
     });
-    const currentComposition = buildTestCardComposition(result.screens, ui);
+    const currentComposition = buildTestCardComposition(result.screens, {
+      ...ui,
+      testCardUseAllScreens: false,
+      testCardCompositionIds: currentIds,
+    });
     const gap = Math.max(0, Number(ui.testCardGapPx) || 0);
     const nextManual = {
       ...(ui.testCardManualPositions || {}),
@@ -45,16 +239,77 @@ export function bindTestCardEvents(params) {
       testCardManualPositions: nextManual,
       testCardActivePlacementId: selectedId,
     });
-  });
+  };
 
-  refs.btnClearTestCardScreens?.addEventListener("click", () => {
+  const removeScreenFromComposition = (screenId) => {
+    const selectedId = String(screenId || "");
+    if (!selectedId) return;
+
+    const ui = getUi();
+    const currentIds = getCurrentCompositionIds();
+    const nextIds = currentIds.filter((id) => id !== selectedId);
+    const nextManual = { ...(ui.testCardManualPositions || {}) };
+    delete nextManual[selectedId];
+
+    setUi({
+      testCardCompositionIds: nextIds,
+      testCardUseAllScreens: false,
+      testCardManualPositions: nextManual,
+      testCardActivePlacementId:
+        ui.testCardActivePlacementId === selectedId
+          ? nextIds[0] || null
+          : ui.testCardActivePlacementId,
+    });
+  };
+
+  const clearTestCardComposition = () => {
     setUi({
       testCardUseAllScreens: false,
       testCardCompositionIds: [],
       testCardManualPositions: {},
       testCardActivePlacementId: null,
     });
+  };
+
+  btnOpenTestCardManageScreens?.addEventListener("click", () => {
+    if (!(testCardManageScreensModal instanceof HTMLElement)) return;
+    closeTestCardPriorityModal();
+    testCardManageScreensModal.removeAttribute("hidden");
   });
+
+  btnCloseTestCardManageScreens?.addEventListener("click", () => {
+    closeTestCardManageScreensModal();
+  });
+
+  testCardManageScreensModal?.addEventListener("click", (event) => {
+    if (event.target === testCardManageScreensModal) {
+      closeTestCardManageScreensModal();
+    }
+  });
+
+  btnClearTestCardScreensModal?.addEventListener("click", () => {
+    clearTestCardComposition();
+  });
+
+  document
+    .getElementById("testCardManageScreensList")
+    ?.addEventListener("click", (event) => {
+      const target = event.target;
+      if (!(target instanceof HTMLElement)) return;
+
+      const removeButton = target.closest(
+        "button[data-action='remove-from-modal']",
+      );
+      if (removeButton instanceof HTMLButtonElement) {
+        removeScreenFromComposition(removeButton.dataset.screenId || "");
+        return;
+      }
+
+      const addButton = target.closest("button[data-action='add-from-modal']");
+      if (addButton instanceof HTMLButtonElement) {
+        addScreenToComposition(addButton.dataset.screenId || "");
+      }
+    });
 
   refs.testCardSelectedScreens?.addEventListener("click", (event) => {
     const target = event.target;
@@ -70,39 +325,21 @@ export function bindTestCardEvents(params) {
     const action = String(actionNode.dataset.action || "");
     if (!screenId) return;
 
-    const ui = getUi();
-    const currentIds = Array.isArray(ui.testCardCompositionIds)
-      ? ui.testCardCompositionIds.map(String)
-      : [];
-
     if (action === "remove") {
-      const nextIds = currentIds.filter((id) => id !== screenId);
-      const nextManual = { ...(ui.testCardManualPositions || {}) };
-      delete nextManual[screenId];
-      setUi({
-        testCardCompositionIds: nextIds,
-        testCardUseAllScreens: false,
-        testCardManualPositions: nextManual,
-        testCardActivePlacementId:
-          ui.testCardActivePlacementId === screenId
-            ? nextIds[0] || null
-            : ui.testCardActivePlacementId,
-      });
+      removeScreenFromComposition(screenId);
       return;
     }
 
     setUi({ testCardActivePlacementId: screenId });
   });
 
-  refs.testCardUseAllScreens?.addEventListener("change", (event) => {
-    const target = event.target;
-    if (!(target instanceof HTMLInputElement)) return;
-
+  const applyUseAllScreens = (useAllScreens) => {
     const result = computeProject({
       config: getState().config,
       screens: getState().screens,
     });
-    if (target.checked) {
+
+    if (useAllScreens) {
       const allIds = result.screens.map((screen) => String(screen.id));
       setUi({
         testCardUseAllScreens: true,
@@ -122,12 +359,26 @@ export function bindTestCardEvents(params) {
       testCardManualPositions: {},
       testCardActivePlacementId: first || null,
     });
+  };
+
+  refs.testCardUseAllScreens?.addEventListener("change", (event) => {
+    const target = event.target;
+    if (!(target instanceof HTMLInputElement)) return;
+    applyUseAllScreens(target.checked);
   });
 
-  refs.testCardLayout?.addEventListener("change", (event) => {
+  testCardLayoutMenuUseAll?.addEventListener("change", (event) => {
     const target = event.target;
-    if (!(target instanceof HTMLSelectElement)) return;
-    setUi({ testCardLayout: target.value || "horizontal" });
+    if (!(target instanceof HTMLInputElement)) return;
+    applyUseAllScreens(target.checked);
+  });
+
+  testCardLayoutQuick?.addEventListener("click", (event) => {
+    const target = event.target;
+    if (!(target instanceof HTMLElement)) return;
+    const button = target.closest("button[data-layout-value]");
+    if (!(button instanceof HTMLButtonElement)) return;
+    setUi({ testCardLayout: button.dataset.layoutValue || "horizontal" });
   });
 
   refs.testCardGapPx?.addEventListener("input", (event) => {
@@ -137,7 +388,23 @@ export function bindTestCardEvents(params) {
     setUi({ testCardGapPx: Number.isFinite(parsed) ? Math.max(0, parsed) : 0 });
   });
 
+  testCardLayoutMenuGapPx?.addEventListener("input", (event) => {
+    const target = event.target;
+    if (!(target instanceof HTMLInputElement)) return;
+    const parsed = Number.parseInt(target.value || "0", 10);
+    setUi({ testCardGapPx: Number.isFinite(parsed) ? Math.max(0, parsed) : 0 });
+  });
+
   refs.testCardGridCols?.addEventListener("input", (event) => {
+    const target = event.target;
+    if (!(target instanceof HTMLInputElement)) return;
+    const parsed = Number.parseInt(target.value || "1", 10);
+    setUi({
+      testCardGridCols: Number.isFinite(parsed) ? Math.max(1, parsed) : 1,
+    });
+  });
+
+  testCardLayoutMenuGridCols?.addEventListener("input", (event) => {
     const target = event.target;
     if (!(target instanceof HTMLInputElement)) return;
     const parsed = Number.parseInt(target.value || "1", 10);
