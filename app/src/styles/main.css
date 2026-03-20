@@ -472,6 +472,21 @@ th {
   line-height: 1.5;
 }
 
+.label-with-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.label-with-icon i {
+  width: 14px;
+  height: 14px;
+}
+
+.cabling-mobile-quick {
+  display: none;
+}
+
 .footnote {
   margin-top: 18px;
   font-size: 0.86rem;
@@ -788,31 +803,6 @@ body.print-compact .panel {
   display: block;
 }
 
-.network-status {
-  margin-top: 10px;
-  display: inline-flex;
-  align-items: center;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  padding: 6px 10px;
-  font-size: 0.76rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  background: var(--surface-soft);
-  color: var(--brand-strong);
-}
-
-.network-status.is-online {
-  border-color: rgba(15, 118, 110, 0.35);
-  color: #0f766e;
-}
-
-.network-status.is-offline {
-  border-color: rgba(185, 28, 28, 0.35);
-  color: #b91c1c;
-}
-
 .view-pane {
   display: none;
   overflow: visible;
@@ -982,8 +972,10 @@ body.print-compact .panel {
 }
 
 .cabinet-action-btn {
-  min-height: 32px;
-  width: 32px;
+  min-height: 40px;
+  min-width: 40px;
+  width: 40px;
+  height: 40px;
   border-radius: 8px;
   border: 1px solid var(--line);
   background: var(--surface);
@@ -992,6 +984,7 @@ body.print-compact .panel {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  touch-action: manipulation;
 }
 
 .cabinet-action-btn:hover {
@@ -1407,6 +1400,63 @@ canvas:active {
     grid-template-columns: 1fr;
   }
 
+  .cabling-notice {
+    display: none;
+  }
+
+  .cabling-controls-legacy {
+    display: none;
+  }
+
+  .cabling-mobile-quick {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 6px;
+    overflow-x: auto;
+    padding: 2px 2px 6px;
+    margin-top: 8px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .cabling-mobile-quick::-webkit-scrollbar {
+    display: none;
+  }
+
+  .cabling-quick-btn {
+    flex: 0 0 auto;
+    min-height: 40px;
+    min-width: 40px;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    color: var(--ink-soft);
+    border-radius: 10px;
+  }
+
+  .cabling-quick-btn.is-active {
+    border-color: var(--brand);
+    color: var(--brand-strong);
+    background: rgba(13, 148, 136, 0.12);
+  }
+
+  .cabling-quick-btn i {
+    width: 18px;
+    height: 18px;
+  }
+
+  .cabling-quick-btn--overclock {
+    color: #b42318;
+    border-color: rgba(239, 68, 68, 0.34);
+    background: rgba(239, 68, 68, 0.08);
+  }
+
+  .cabling-quick-btn--overclock.is-active {
+    color: #fff;
+    border-color: #b42318;
+    background: #b42318;
+  }
+
   .project-quick-actions {
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 6px;
@@ -1544,7 +1594,6 @@ canvas:active {
   .category-nav,
   .panel:first-child,
   .report-actions,
-  .network-status,
   .footnote {
     display: none !important;
   }

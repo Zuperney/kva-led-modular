@@ -3,7 +3,6 @@ import { getElement } from "./dom.js";
 export function createUiRefs() {
   const refs = {
     migrationStatus: getElement("migrationStatus"),
-    networkStatus: getElement("networkStatus"),
     screensList: getElement("screensList"),
     navButtons: document.querySelectorAll("[data-view]"),
     viewPanes: document.querySelectorAll("[data-view-pane]"),
@@ -43,6 +42,7 @@ export function createUiRefs() {
     cablingScreensList: getElement("cablingScreensList"),
     cfgCablingOrientation: getElement("cfgCablingOrientation"),
     cfgCablingStrategy: getElement("cfgCablingStrategy"),
+    cablingQuickBar: getElement("cablingQuickBar"),
     testCardScreen: getElement("testCardScreen"),
     btnAddTestCardScreen: getElement("btnAddTestCardScreen"),
     btnClearTestCardScreens: getElement("btnClearTestCardScreens"),

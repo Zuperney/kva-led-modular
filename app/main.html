@@ -58,10 +58,10 @@
     <nav id="tabsNav" class="category-nav screen-only" aria-label="Categorias de operacao">
       <button class="nav-chip active" data-view="home" type="button">Home</button>
       <button class="nav-chip" data-view="project" type="button">Projetos de Painel</button>
-      <button class="nav-chip" data-view="cabinets" type="button">Catalogo de Gabinetes</button>
       <button class="nav-chip" data-view="cabling" type="button">Cabeamento</button>
       <button class="nav-chip" data-view="testcard" type="button">Test Card</button>
       <button class="nav-chip" data-view="report" type="button">Relatorios</button>
+      <button class="nav-chip" data-view="cabinets" type="button">Catalogo de Gabinetes</button>
     </nav>
 
     <section class="layout">
@@ -189,32 +189,64 @@
 
         <section class="view-pane" data-view-pane="cabling">
           <h2>Cabeamento</h2>
-          <div class="notice">
+          <div class="notice cabling-notice">
             Vista simplificada para planejamento inicial de roteamento e distribuicao de portas.
           </div>
-          <div class="actions" style="margin-top: 10px;">
-            <div class="config-field">
-              <label for="cfgCablingOrientation">Orientacao do cabo</label>
-              <select id="cfgCablingOrientation" class="screen-select">
-                <option value="horizontal">Horizontal (zig-zag)</option>
-                <option value="vertical">Vertical (zig-zag)</option>
-              </select>
-            </div>
-            <div class="config-field">
-              <label for="cfgCablingStrategy">Estrategia de Calculo</label>
-              <select id="cfgCablingStrategy" class="screen-select">
-                <option value="largura">Priorizar Largura</option>
-                <option value="altura">Priorizar Altura</option>
-                <option value="area">Melhor Area</option>
-              </select>
-            </div>
-            <div class="config-field">
-              <label for="cfgOverclock">Overclock</label>
-              <input type="checkbox" id="cfgOverclock">
-            </div>
+          <div id="cablingQuickBar" class="cabling-mobile-quick screen-only" role="group" aria-label="Atalhos de cabeamento">
+            <button class="btn-icon cabling-quick-btn" type="button" data-cabling-action="orientation" data-value="horizontal" aria-label="Zig-zag na largura" title="Zig-zag na largura">
+              <i data-lucide="arrow-left-right" aria-hidden="true"></i>
+            </button>
+            <button class="btn-icon cabling-quick-btn" type="button" data-cabling-action="orientation" data-value="vertical" aria-label="Zig-zag na altura" title="Zig-zag na altura">
+              <i data-lucide="arrow-down-up" aria-hidden="true"></i>
+            </button>
+            <button class="btn-icon cabling-quick-btn" type="button" data-cabling-action="strategy" data-value="largura" aria-label="Priorizar largura" title="Priorizar largura">
+              <i data-lucide="arrow-left-to-line" aria-hidden="true"></i>
+            </button>
+            <button class="btn-icon cabling-quick-btn" type="button" data-cabling-action="strategy" data-value="altura" aria-label="Priorizar altura" title="Priorizar altura">
+              <i data-lucide="arrow-up-from-line" aria-hidden="true"></i>
+            </button>
+            <button class="btn-icon cabling-quick-btn" type="button" data-cabling-action="strategy" data-value="area" aria-label="Melhor area" title="Melhor area">
+              <i data-lucide="axis-3d" aria-hidden="true"></i>
+            </button>
+            <button class="btn-icon cabling-quick-btn cabling-quick-btn--overclock" type="button" data-cabling-action="overclock" aria-label="Overclock" title="Overclock">
+              <i data-lucide="triangle-alert" aria-hidden="true"></i>
+            </button>
+            <button class="btn-icon cabling-quick-btn" type="button" data-cabling-action="rebuild" aria-label="Atualizar canvas" title="Atualizar canvas">
+              <i data-lucide="refresh-cw" aria-hidden="true"></i>
+            </button>
           </div>
-          <div class="actions" style="margin-top: 10px;">
-            <button id="btnRebuildCanvas" class="btn-secondary" type="button">Atualizar Canvas</button>
+
+          <div class="cabling-controls-legacy">
+            <div class="actions" style="margin-top: 10px;">
+              <div class="config-field">
+                <label for="cfgCablingOrientation" class="label-with-icon">
+                  <i data-lucide="shuffle" aria-hidden="true"></i>
+                  <span>Orientacao do cabo (zig-zag)</span>
+                </label>
+                <select id="cfgCablingOrientation" class="screen-select">
+                  <option value="horizontal">Horizontal (zig-zag)</option>
+                  <option value="vertical">Vertical (zig-zag)</option>
+                </select>
+              </div>
+              <div class="config-field">
+                <label for="cfgCablingStrategy">Estrategia de Calculo</label>
+                <select id="cfgCablingStrategy" class="screen-select">
+                  <option value="largura">Priorizar Largura</option>
+                  <option value="altura">Priorizar Altura</option>
+                  <option value="area">Melhor Area</option>
+                </select>
+              </div>
+              <div class="config-field">
+                <label for="cfgOverclock">Overclock</label>
+                <input type="checkbox" id="cfgOverclock">
+              </div>
+            </div>
+            <div class="actions" style="margin-top: 10px;">
+              <button id="btnRebuildCanvas" class="btn-secondary" type="button">
+                <i data-lucide="refresh-cw" aria-hidden="true"></i>
+                <span>Atualizar Canvas</span>
+              </button>
+            </div>
           </div>
         </section>
 
@@ -319,7 +351,6 @@
         </section>
 
         <div id="migrationStatus"></div>
-        <div id="networkStatus" class="network-status" role="status" aria-live="polite">Online</div>
       </aside>
 
       <main class="panel">

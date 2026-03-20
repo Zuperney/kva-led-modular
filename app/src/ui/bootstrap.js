@@ -27,22 +27,6 @@ function refreshIcons() {
   lucide.createIcons();
 }
 
-function setupConnectivityStatus(refs) {
-  const node = refs.networkStatus;
-  if (!node) return;
-
-  const update = () => {
-    const online = navigator.onLine !== false;
-    node.textContent = online ? "Online" : "Offline";
-    node.classList.toggle("is-online", online);
-    node.classList.toggle("is-offline", !online);
-  };
-
-  window.addEventListener("online", update);
-  window.addEventListener("offline", update);
-  update();
-}
-
 export function bootstrapApp() {
   const refs = createUiRefs();
   let warnedStorageFallback = false;
@@ -102,6 +86,5 @@ export function bootstrapApp() {
 
   renderAll(refs, state, ui);
   refreshIcons();
-  setupConnectivityStatus(refs);
   setupReportPrintHandlers();
 }
