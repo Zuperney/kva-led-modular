@@ -1,0 +1,92 @@
+{
+  "version": "template.telas.v1",
+  "descricao": "Template para cadastro/importacao de telas do projeto",
+  "instrucoes_simples": [
+    "Preencha as configuracoes gerais em config.",
+    "Adicione cada tela dentro de telas: [ ... ].",
+    "Use os campos: id, nome, quantidade_colunas, quantidade_linhas, gabinete_nome.",
+    "quantidade_colunas e quantidade_linhas devem ser numeros inteiros maiores que zero.",
+    "gabinete_nome deve ser igual ao nome do gabinete importado no catalogo.",
+    "Em config, brilho representa percentual de uso (100 = potencia maxima do gabinete).",
+    "Mantenha os nomes dos campos exatamente iguais a este modelo."
+  ],
+  "config": {
+    "tensao": 380,
+    "fase": 3,
+    "brilho": 100,
+    "margem": 15,
+    "reservaCircuito": 25
+  },
+  "telas": [
+    {
+      "id": "tela-001",
+      "nome": "Tela Principal",
+      "quantidade_colunas": 12,
+      "quantidade_linhas": 8,
+      "gabinete_nome": "MG10 P2.6"
+    },
+    {
+      "id": "tela-002",
+      "nome": "Tela Lateral",
+      "quantidade_colunas": 6,
+      "quantidade_linhas": 4,
+      "gabinete_nome": "MG10 P2.6"
+    },
+    {
+      "id": "tela-003",
+      "nome": "Backdrop Palco",
+      "quantidade_colunas": 14,
+      "quantidade_linhas": 9,
+      "gabinete_nome": "MG10 P3.9"
+    },
+    {
+      "id": "tela-004",
+      "nome": "Painel DJ",
+      "quantidade_colunas": 8,
+      "quantidade_linhas": 5,
+      "gabinete_nome": "Rental 500x500 P2.9"
+    },
+    {
+      "id": "tela-005",
+      "nome": "Totem Esquerdo",
+      "quantidade_colunas": 2,
+      "quantidade_linhas": 6,
+      "gabinete_nome": "Rental 500x1000 P3.9"
+    },
+    {
+      "id": "tela-006",
+      "nome": "Totem Direito",
+      "quantidade_colunas": 2,
+      "quantidade_linhas": 6,
+      "gabinete_nome": "Rental 500x1000 P3.9"
+    },
+    {
+      "id": "tela-007",
+      "nome": "Faixa Superior",
+      "quantidade_colunas": 16,
+      "quantidade_linhas": 2,
+      "gabinete_nome": "MG7 P2.9"
+    },
+    {
+      "id": "tela-008",
+      "nome": "Entrada A",
+      "quantidade_colunas": 5,
+      "quantidade_linhas": 3,
+      "gabinete_nome": "Indoor P2.0 640x480"
+    },
+    {
+      "id": "tela-009",
+      "nome": "Entrada B",
+      "quantidade_colunas": 5,
+      "quantidade_linhas": 3,
+      "gabinete_nome": "Indoor P2.0 640x480"
+    },
+    {
+      "id": "tela-010",
+      "nome": "Plenaria",
+      "quantidade_colunas": 10,
+      "quantidade_linhas": 6,
+      "gabinete_nome": "Fine Pitch P1.9"
+    }
+  ]
+}

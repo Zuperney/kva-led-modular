@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KVA LED Modular</title>
+  <link rel="stylesheet" href="./src/styles/main.css">
+</head>
+
+<body>
+  <div class="shell">
+    <header class="hero">
+      <h1>Dimensionamento LED MG10 P2.6</h1>
+      <p>
+        Base modular da aplicacao. Esta interface preserva o estilo visual do projeto atual
+        enquanto a logica e migrada para modulos independentes.
+      </p>
+      <div class="hero-tags">
+        <span>Fase 1: Estrutura Modular</span>
+        <span>Fonte de verdade: KVA</span>
+        <span>Limite por porta: 655360 px</span>
+      </div>
+    </header>
+
+    <section class="stats" id="dashboardStats">
+      <article class="stat"><span class="stat-label">Tensao de Entrada</span>
+        <div class="stat-value" id="dashTensao">220 V</div>
+      </article>
+      <article class="stat"><span class="stat-label">Gabinetes</span>
+        <div class="stat-value" id="dashGab">0</div>
+      </article>
+      <article class="stat"><span class="stat-label">Pixels Totais</span>
+        <div class="stat-value" id="dashPx">0</div>
+      </article>
+      <article class="stat"><span class="stat-label">Potencia Real</span>
+        <div class="stat-value" id="dashWatts">0 W</div>
+      </article>
+      <article class="stat"><span class="stat-label">Carga Aparente</span>
+        <div class="stat-value" id="dashKva">0.00 kVA</div>
+      </article>
+      <article class="stat"><span class="stat-label">Corrente por Fase</span>
+        <div class="stat-value" id="dashAmp">0.00 A</div>
+      </article>
+      <article class="stat"><span class="stat-label">Disjuntor Sugerido</span>
+        <div class="stat-value" id="dashBreaker">-</div>
+      </article>
+    </section>
+
+    <nav class="category-nav screen-only" aria-label="Categorias de operacao">
+      <button class="nav-chip" data-view="project" type="button">Projetos de Painel</button>
+      <button class="nav-chip" data-view="cabinets" type="button">Catalogo de Gabinetes</button>
+      <button class="nav-chip active" data-view="cabling" type="button">Cabeamento</button>
+      <button class="nav-chip" data-view="testcard" type="button">Test Card</button>
+      <button class="nav-chip" data-view="report" type="button">Relatorios</button>
+    </nav>
+
+    <section class="layout">
+      <aside class="panel">
+        <section class="view-pane" data-view-pane="project">
+          <h2>Telas do Projeto</h2>
+          <div class="config-card">
+            <div class="config-card-head">
+              <h3>Parametros Eletricos</h3>
+              <button id="btnOpenElectricalConfig" class="btn-icon" type="button" aria-label="Abrir configuracoes avancadas">&#9881;</button>
+            </div>
+            <div class="form-grid-two">
+              <div class="config-field">
+                <label for="cfgSistema">Sistema</label>
+                <select id="cfgSistema" class="screen-select">
+                  <option value="mono">Monofasico</option>
+                  <option value="bi" selected>Bifasico</option>
+                  <option value="tri">Trifasico equilibrado</option>
+                </select>
+              </div>
+              <div class="config-field">
+                <label for="cfgTensao">Tensao</label>
+                <select id="cfgTensao" class="screen-select"></select>
+              </div>
+            </div>
+            <p class="config-hint" id="cfgSistemaHint">Selecione o sistema e a tensao de operacao do evento.</p>
+          </div>
+
+          <div id="electricalConfigModal" class="modal-backdrop" hidden>
+            <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="electricalConfigTitle">
+              <div class="modal-head">
+                <h3 id="electricalConfigTitle">Configuracoes avancadas</h3>
+                <button id="btnCloseElectricalConfig" class="btn-icon" type="button" aria-label="Fechar configuracoes">x</button>
+              </div>
+              <div class="modal-grid">
+                <div class="config-field">
+                  <label for="cfgBrilho">Brilho do painel (%)</label>
+                  <input id="cfgBrilho" class="screen-input" type="number" min="0" max="100" step="1" placeholder="100">
+                </div>
+                <div class="config-field">
+                  <label for="cfgMargem">Margem (%)</label>
+                  <input id="cfgMargem" class="screen-input" type="number" min="0" step="1" placeholder="15">
+                </div>
+                <div class="config-field">
+                  <label for="cfgReservaCircuito">Reserva de circuito (%)</label>
+                  <input id="cfgReservaCircuito" class="screen-input" type="number" min="0" step="1" placeholder="25">
+                </div>
+                <div class="config-field">
+                  <label for="cfgPixelsPerPort">Pixels por Porta</label>
+                  <input id="cfgPixelsPerPort" class="screen-input" type="number" min="1" step="1" placeholder="655360">
+                </div>
+              </div>
+              <p class="config-hint">Brilho, margem e reserva alteram potencia, corrente e disjuntor sugerido.</p>
+              <div class="modal-actions">
+                <button id="btnSaveElectricalConfig" class="btn-primary" type="button">Aplicar</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button id="btnAddScreen" class="btn-primary" type="button">Adicionar Tela</button>
+            <button id="btnSaveProject" class="btn-secondary" type="button">Salvar Projeto</button>
+          </div>
+          <div class="actions">
+            <button id="btnExportProject" class="btn-secondary" type="button">Exportar Projeto</button>
+            <button id="btnImportProject" class="btn-secondary" type="button">Importar Projeto</button>
+          </div>
+          <input id="importProjectInput" type="file" accept=".json" hidden>
+          <div id="screensList" class="screens-list"></div>
+        </section>
+
+        <section class="view-pane" data-view-pane="cabinets">
+          <h2>Catalogo de Gabinetes</h2>
+          <div class="actions">
+            <button id="btnImportCabinets" class="btn-primary" type="button">Importar TXT/CSV/JSON</button>
+            <button id="btnAddCabinet" class="btn-secondary" type="button">Cadastrar</button>
+          </div>
+          <input id="importCabinetInput" type="file" accept=".txt,.csv,.json,text/plain,application/json" hidden>
+
+          <div class="cabinet-form" id="cabinetForm">
+            <input id="cabNome" type="text" placeholder="Nome (ex: MG10 P2.6)">
+            <div class="form-grid-two">
+              <input id="cabLargura" type="number" min="1" placeholder="Largura mm">
+              <input id="cabAltura" type="number" min="1" placeholder="Altura mm">
+            </div>
+            <div class="form-grid-two">
+              <input id="cabPxW" type="number" min="1" placeholder="Pixel W">
+              <input id="cabPxH" type="number" min="1" placeholder="Pixel H">
+            </div>
+            <div class="form-grid-two">
+              <input id="cabPeso" type="number" min="0.1" step="0.1" placeholder="Peso kg">
+              <input id="cabWatts" type="number" min="1" step="1" placeholder="Watts max">
+            </div>
+            <input id="cabFp" type="number" min="0.1" max="1" step="0.01" placeholder="FP (ex: 0.90)">
+          </div>
+
+          <div id="cabinetsList" class="cabinets-list"></div>
+        </section>
+
+        <section class="view-pane active" data-view-pane="cabling">
+          <h2>Cabeamento</h2>
+          <div class="notice">
+            Vista simplificada para planejamento inicial de roteamento e distribuicao de portas.
+          </div>
+          <div class="actions" style="margin-top: 10px;">
+            <div class="config-field">
+              <label for="cfgCablingOrientation">Orientacao do cabo</label>
+              <select id="cfgCablingOrientation" class="screen-select">
+                <option value="horizontal">Horizontal (zig-zag)</option>
+                <option value="vertical">Vertical (zig-zag)</option>
+              </select>
+            </div>
+            <div class="config-field">
+              <label for="cfgCablingStrategy">Estrategia de Calculo</label>
+              <select id="cfgCablingStrategy" class="screen-select">
+                <option value="largura">Priorizar Largura</option>
+                <option value="altura">Priorizar Altura</option>
+                <option value="area">Melhor Area</option>
+              </select>
+            </div>
+            <div class="config-field">
+              <label for="cfgOverclock">Overclock</label>
+              <input type="checkbox" id="cfgOverclock">
+            </div>
+          </div>
+          <div class="actions" style="margin-top: 10px;">
+            <button id="btnRebuildCanvas" class="btn-secondary" type="button">Atualizar Canvas</button>
+          </div>
+        </section>
+
+        <section class="view-pane" data-view-pane="testcard">
+          <h2>Test Card</h2>
+          <div class="notice">
+            Gere um test card customizado e exporte em PNG ou PDF para validacao de painel.
+          </div>
+
+          <div class="testcard-controls">
+            <div class="form-grid-two">
+              <div class="config-field">
+                <label for="testCardScreen">Biblioteca de telas</label>
+                <select id="testCardScreen" class="screen-select"></select>
+              </div>
+              <div class="actions" style="margin-bottom: 0;">
+                <button id="btnAddTestCardScreen" class="btn-secondary" type="button">Adicionar ao canvas</button>
+                <button id="btnClearTestCardScreens" class="btn-secondary" type="button">Limpar composicao</button>
+              </div>
+            </div>
+
+            <div class="config-field">
+              <label for="testCardSelectedScreens">Telas na composicao (clique para selecionar, x para remover)</label>
+              <div id="testCardSelectedScreens" class="testcard-screen-list"></div>
+            </div>
+
+            <div class="form-grid-two">
+              <div class="config-field">
+                <label for="testCardLayout">Auto-organizacao inicial</label>
+                <select id="testCardLayout" class="screen-select">
+                  <option value="horizontal">Horizontal</option>
+                  <option value="vertical">Vertical</option>
+                  <option value="grid">Grade</option>
+                </select>
+              </div>
+              <label class="testcard-toggle" for="testCardUseAllScreens">
+                <input id="testCardUseAllScreens" type="checkbox" checked>
+                Iniciar com todas as telas
+              </label>
+            </div>
+
+            <div class="form-grid-two">
+              <div class="config-field">
+                <label for="testCardGapPx">Espacamento entre telas (px)</label>
+                <input id="testCardGapPx" class="screen-input" type="number" min="0" step="1" value="0">
+              </div>
+              <div class="config-field">
+                <label for="testCardGridCols">Colunas na grade (quando layout = grade)</label>
+                <input id="testCardGridCols" class="screen-input" type="number" min="1" step="1" value="2">
+              </div>
+            </div>
+
+            <div class="form-grid-two">
+              <div class="config-field">
+                <label for="testCardPosX">Posicao X — tela ativa (px)</label>
+                <input id="testCardPosX" class="screen-input" type="number" min="0" step="1" value="0">
+              </div>
+              <div class="config-field">
+                <label for="testCardPosY">Posicao Y — tela ativa (px)</label>
+                <input id="testCardPosY" class="screen-input" type="number" min="0" step="1" value="0">
+              </div>
+            </div>
+
+            <div class="actions">
+              <button id="btnAutoAlignTestCard" class="btn-secondary" type="button">Auto-alinhar (reset posicoes)</button>
+            </div>
+
+            <div class="actions">
+              <button id="btnExportTestCardPng" class="btn-primary" type="button">Exportar PNG</button>
+              <button id="btnExportTestCardPdf" class="btn-secondary" type="button">Exportar PDF</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="view-pane" data-view-pane="report">
+          <h2>Relatorios</h2>
+          <div class="notice">
+            Escolha o pacote de informacoes e exporte em PDF. O modo completo gera uma capa consolidada e paginas detalhadas por tela com o mapa de cabeamento.
+          </div>
+
+          <div class="config-card" style="margin-top: 12px;">
+            <div class="config-field">
+              <label for="reportType">Tipo de relatorio</label>
+              <select id="reportType" class="screen-select">
+                <option value="complete">Completo</option>
+                <option value="summary">Resumido</option>
+                <option value="design">Informacoes de design</option>
+                <option value="structural">Informacoes estruturais</option>
+                <option value="electrical">Informacoes eletricas</option>
+                <option value="cabinets">Informacoes de gabinetes</option>
+              </select>
+            </div>
+            <p class="config-hint" id="reportTypeDescription">
+              Primeira pagina consolidada e paginas seguintes dedicadas a cada tela com cabeamento, energia, peso e dados detalhados.
+            </p>
+          </div>
+
+          <div class="actions">
+            <button id="btnExportDetailedReportPdf" class="btn-primary" type="button">Exportar PDF</button>
+          </div>
+          <p class="config-hint">A exportacao usa a impressao do navegador com layout paginado desta aba.</p>
+        </section>
+
+        <div id="migrationStatus"></div>
+      </aside>
+
+      <main class="panel">
+        <section class="view-pane" data-view-pane="project">
+          <div class="report-actions screen-only">
+            <h2>Relatorio Consolidado</h2>
+            <div class="actions-inline">
+              <button id="btnPrintReport" class="btn-primary" type="button">Imprimir / PDF</button>
+              <button id="btnPrintCompact" class="btn-secondary" type="button">Modo Compacto</button>
+            </div>
+          </div>
+
+          <section class="report-sheet" id="reportSheet">
+            <header class="report-header">
+              <div>
+                <h2>Relatorio Tecnico - KVA LED Modular</h2>
+                <p class="report-subtitle">Base de calculo oficial KVA | Politica de UI: arredondamento para menos</p>
+              </div>
+              <div class="report-meta">
+                <p><strong>Gerado em:</strong> <span id="rptGeneratedAt">-</span></p>
+                <p><strong>Tensao / Fase:</strong> <span id="rptConfig">-</span></p>
+                <p><strong>Processadora:</strong> <span id="rptProcessor">-</span></p>
+                <p><strong>Portas estimadas:</strong> <span id="rptPorts">-</span></p>
+              </div>
+            </header>
+
+            <div class="table-wrap report-table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Tela</th>
+                    <th>Dimensoes / Area</th>
+                    <th>Gabinetes</th>
+                    <th>Resolucao (px)</th>
+                    <th>Potencia</th>
+                    <th>Carga</th>
+                  </tr>
+                </thead>
+                <tbody id="reportBody"></tbody>
+                <tfoot>
+                  <tr>
+                    <td><strong>Totais</strong></td>
+                    <td id="totArea">Area total: 0,00 m²</td>
+                    <td id="totGab">0</td>
+                    <td id="totPx">Total px: 0</td>
+                    <td id="totWatts">0 W</td>
+                    <td id="totKva">0,00 kVA</td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+
+            <section class="report-summary-grid">
+              <article>
+                <span>Corrente total</span>
+                <strong id="rptCurrent">0,00 A</strong>
+              </article>
+              <article>
+                <span>Disjuntor minimo</span>
+                <strong id="rptBreakerMin">0,00 A</strong>
+              </article>
+              <article>
+                <span>Disjuntor sugerido</span>
+                <strong id="rptBreaker">-</strong>
+              </article>
+              <article>
+                <span>Peso total</span>
+                <strong id="rptWeight">0,0 kg</strong>
+              </article>
+            </section>
+          </section>
+        </section>
+
+        <section class="view-pane" data-view-pane="cabinets">
+          <h2>Cadastro de Gabinetes</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Nome</th>
+                  <th>Tamanho (mm)</th>
+                  <th>Pixels</th>
+                  <th>Peso</th>
+                  <th>Watts</th>
+                  <th>FP</th>
+                  <th>Max Gab/Cabo</th>
+                </tr>
+              </thead>
+              <tbody id="cabinetTableBody"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="view-pane active" data-view-pane="cabling">
+          <h2>Cabeamento</h2>
+          <div class="canvas-grid-cabling">
+            <article class="canvas-card">
+              <h3>Cabeamento (estimado)</h3>
+              <div id="cablingSummary" class="cabling-summary"></div>
+              <div class="canvas-controls">
+                <button id="btnZoomIn" class="btn-icon" title="Aproximar">+</button>
+                <button id="btnZoomOut" class="btn-icon" title="Afastar">-</button>
+                <button id="btnZoomReset" class="btn-icon" title="Resetar zoom">100%</button>
+              </div>
+              <canvas id="cablingCanvas" width="900" height="400"></canvas>
+            </article>
+            <div class="screen-list-cabling">
+              <h3>Telas</h3>
+              <div id="cablingScreensList"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="view-pane" data-view-pane="testcard">
+          <h2>Preview do Test Card</h2>
+          <article class="canvas-card">
+            <section class="testcard-style-panel">
+              <h3>Estilizacao do Test Card</h3>
+              <div class="form-grid-two">
+                <div class="config-field">
+                  <label for="testCardPreset">Preset</label>
+                  <select id="testCardPreset" class="screen-select">
+                    <option value="classic">Classic</option>
+                    <option value="grid">Grid</option>
+                    <option value="colorbars">Color Bars</option>
+                    <option value="focus">Focus</option>
+                  </select>
+                </div>
+                <div class="config-field">
+                  <label for="testCardTitle">Titulo</label>
+                  <input id="testCardTitle" class="screen-input" type="text" value="LED TEST CARD" maxlength="60">
+                </div>
+              </div>
+
+              <div class="form-grid-two">
+                <div class="config-field">
+                  <label for="testCardBg">Cor fundo</label>
+                  <div class="testcard-color-grid" data-color-palette="testCardBg">
+                    <button type="button" class="testcard-color-swatch" data-color="#0f172a" style="--swatch:#0f172a" title="Azul noturno"></button>
+                    <button type="button" class="testcard-color-swatch" data-color="#1e293b" style="--swatch:#1e293b" title="Slate"></button>
+                    <button type="button" class="testcard-color-swatch" data-color="#111827" style="--swatch:#111827" title="Carbon"></button>
+                    <button type="button" class="testcard-color-swatch" data-color="#3f3f46" style="--swatch:#3f3f46" title="Grafite"></button>
+                    <button type="button" class="testcard-color-swatch" data-color="#0b3b2e" style="--swatch:#0b3b2e" title="Verde escuro"></button>
+                    <button type="button" class="testcard-color-picker" data-action="open-color" data-input-id="testCardBg" title="Conta-gotas"></button>
+                  </div>
+                  <input id="testCardBg" class="screen-input testcard-color-input-native" type="color" value="#0f172a">
+                </div>
+                <div class="config-field">
+                  <label for="testCardFg">Cor principal</label>
+                  <div class="testcard-color-grid" data-color-palette="testCardFg">
+                    <button type="button" class="testcard-color-swatch" data-color="#e5e7eb" style="--swatch:#e5e7eb" title="Cinza claro"></button>
+                    <button type="button" class="testcard-color-swatch" data-color="#ffffff" style="--swatch:#ffffff" title="Branco"></button>
+                    <button type="button" class="testcard-color-swatch" data-color="#fef3c7" style="--swatch:#fef3c7" title="Creme"></button>
+                    <button type="button" class="testcard-color-swatch" data-color="#cbd5e1" style="--swatch:#cbd5e1" title="Prata"></button>
+                    <button type="button" class="testcard-color-swatch" data-color="#93c5fd" style="--swatch:#93c5fd" title="Azul claro"></button>
+                    <button type="button" class="testcard-color-picker" data-action="open-color" data-input-id="testCardFg" title="Conta-gotas"></button>
+                  </div>
+                  <input id="testCardFg" class="screen-input testcard-color-input-native" type="color" value="#e5e7eb">
+                </div>
+              </div>
+
+              <div class="form-grid-two">
+                <div class="config-field">
+                  <label for="testCardAccent">Cor destaque</label>
+                  <div class="testcard-color-grid" data-color-palette="testCardAccent">
+                    <button type="button" class="testcard-color-swatch" data-color="#22d3ee" style="--swatch:#22d3ee" title="Ciano"></button>
+                    <button type="button" class="testcard-color-swatch" data-color="#f97316" style="--swatch:#f97316" title="Laranja"></button>
+                    <button type="button" class="testcard-color-swatch" data-color="#ef4444" style="--swatch:#ef4444" title="Vermelho"></button>
+                    <button type="button" class="testcard-color-swatch" data-color="#22c55e" style="--swatch:#22c55e" title="Verde"></button>
+                    <button type="button" class="testcard-color-swatch" data-color="#a78bfa" style="--swatch:#a78bfa" title="Violeta"></button>
+                    <button type="button" class="testcard-color-picker" data-action="open-color" data-input-id="testCardAccent" title="Conta-gotas"></button>
+                  </div>
+                  <input id="testCardAccent" class="screen-input testcard-color-input-native" type="color" value="#22d3ee">
+                </div>
+                <label class="testcard-toggle" for="testCardShowGrid">
+                  <input id="testCardShowGrid" type="checkbox" checked>
+                  Exibir grade auxiliar
+                </label>
+              </div>
+
+              <div class="form-grid-two">
+                <label class="testcard-toggle" for="testCardShowCabling">
+                  <input id="testCardShowCabling" type="checkbox">
+                  Mostrar cabeamento dentro das telas
+                </label>
+                <label class="testcard-toggle" for="testCardShowNames">
+                  <input id="testCardShowNames" type="checkbox" checked>
+                  Mostrar nomes das telas
+                </label>
+              </div>
+
+              <div class="form-grid-two">
+                <label class="testcard-toggle" for="testCardShowTargets">
+                  <input id="testCardShowTargets" type="checkbox" checked>
+                  Mostrar circulos e X de mira
+                </label>
+              </div>
+            </section>
+
+            <div class="canvas-controls">
+              <button id="btnTestCardZoomIn" class="btn-icon" title="Aproximar">+</button>
+              <button id="btnTestCardZoomOut" class="btn-icon" title="Afastar">-</button>
+              <button id="btnTestCardZoomReset" class="btn-icon" title="Resetar zoom e pan">100%</button>
+            </div>
+            <canvas id="testCardCanvas" width="900" height="400"></canvas>
+            <div id="testCardMeta" class="cabling-summary"></div>
+          </article>
+        </section>
+
+        <section class="view-pane" data-view-pane="report">
+          <div class="report-preview-head">
+            <div>
+              <h2>Central de Relatorios</h2>
+              <p id="reportPreviewLead" class="report-subtitle">Selecione o tipo desejado para montar o pacote de exportacao.</p>
+            </div>
+            <div id="reportPageCount" class="report-page-count">0 paginas</div>
+          </div>
+          <div id="reportPreview" class="report-preview-stack"></div>
+        </section>
+
+      </main>
+    </section>
+  </div>
+
+  <script type="module" src="./src/main.js"></script>
+</body>
+
+</html>

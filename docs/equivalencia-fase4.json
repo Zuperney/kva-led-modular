@@ -1,0 +1,12 @@
+{
+  "generatedAt": "2026-03-19T21:41:41.851Z",
+  "parser": {
+    "parsedCount": 2,
+    "skippedCount": 1,
+    "fallbackFpApplied": true
+  },
+  "projectIO": {
+    "roundtripOk": true,
+    "exportedLength": 671
+  }
+}

@@ -1,0 +1,36 @@
+export function createInitialUiState(state, params) {
+  const { loadCabinetCatalog, loadElectricalSystemPreference } = params;
+
+  return {
+    activeView: "cabling",
+    selectedScreenId: state.screens[0]?.id || null,
+    cabinets: loadCabinetCatalog(state),
+    electricalSystem: loadElectricalSystemPreference(state.config),
+    cablingOrientation: "horizontal",
+    cablingStrategy: "largura",
+    cablingCanvasZoom: 1,
+    cablingCanvasPanX: 0,
+    cablingCanvasPanY: 0,
+    testCardScreenId: state.screens[0]?.id || null,
+    testCardUseAllScreens: true,
+    testCardCompositionIds: state.screens.map((screen) => String(screen.id)),
+    testCardManualPositions: {},
+    testCardActivePlacementId: null,
+    testCardLayout: "horizontal",
+    testCardGapPx: 0,
+    testCardGridCols: 2,
+    testCardCanvasZoom: 1,
+    testCardCanvasPanX: 0,
+    testCardCanvasPanY: 0,
+    testCardPreset: "classic",
+    testCardTitle: "LED TEST CARD",
+    testCardBg: "#0f172a",
+    testCardFg: "#e5e7eb",
+    testCardAccent: "#22d3ee",
+    testCardShowGrid: true,
+    testCardShowCabling: false,
+    testCardShowNames: true,
+    testCardShowTargets: true,
+    reportType: "complete",
+  };
+}

@@ -1,0 +1,81 @@
+{
+  "generatedAt": "2026-03-19T21:41:41.583Z",
+  "source": "app/src/core/calculations.js",
+  "totalScenarios": 12,
+  "passed": 12,
+  "failed": 0,
+  "results": [
+    {
+      "id": 1,
+      "name": "Painel pequeno indoor",
+      "ok": true,
+      "issues": []
+    },
+    {
+      "id": 2,
+      "name": "Backdrop palco medio",
+      "ok": true,
+      "issues": []
+    },
+    {
+      "id": 3,
+      "name": "Painel lateral arena",
+      "ok": true,
+      "issues": []
+    },
+    {
+      "id": 4,
+      "name": "Painel central evento",
+      "ok": true,
+      "issues": []
+    },
+    {
+      "id": 5,
+      "name": "Mega painel abertura",
+      "ok": true,
+      "issues": []
+    },
+    {
+      "id": 6,
+      "name": "Plenaria dupla",
+      "ok": true,
+      "issues": []
+    },
+    {
+      "id": 7,
+      "name": "Show estadio",
+      "ok": true,
+      "issues": []
+    },
+    {
+      "id": 8,
+      "name": "Festival grande porte",
+      "ok": true,
+      "issues": []
+    },
+    {
+      "id": 9,
+      "name": "Circuito multiplos paineis",
+      "ok": true,
+      "issues": []
+    },
+    {
+      "id": 10,
+      "name": "Abertura olimpica",
+      "ok": true,
+      "issues": []
+    },
+    {
+      "id": 11,
+      "name": "Tela monumental",
+      "ok": true,
+      "issues": []
+    },
+    {
+      "id": 12,
+      "name": "Estrutura extrema",
+      "ok": true,
+      "issues": []
+    }
+  ]
+}

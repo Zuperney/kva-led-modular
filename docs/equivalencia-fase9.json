@@ -1,0 +1,67 @@
+{
+  "generatedAt": "2026-03-19T22:04:18.437Z",
+  "suite": "phase9-operational",
+  "summary": {
+    "total": 7,
+    "passed": 7,
+    "failed": 0
+  },
+  "checks": [
+    {
+      "name": "catalog_import_has_items",
+      "ok": true,
+      "detail": {
+        "parsedCount": 11,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "template_telas_imported",
+      "ok": true,
+      "detail": {
+        "screens": 10
+      }
+    },
+    {
+      "name": "template_brightness_present",
+      "ok": true,
+      "detail": {
+        "brilho": 100
+      }
+    },
+    {
+      "name": "compute_project_totals_finite",
+      "ok": true,
+      "detail": {
+        "potencia_w": 151593,
+        "carga_kva": 166.3384210526316,
+        "corrente_a": 252.72508466135298
+      }
+    },
+    {
+      "name": "io_roundtrip_v1_ok",
+      "ok": true,
+      "detail": {
+        "errors": []
+      }
+    },
+    {
+      "name": "brightness_50_reduces_power_linearly",
+      "ok": true,
+      "detail": {
+        "power100": 151593,
+        "power50": 75796.5
+      }
+    },
+    {
+      "name": "cabinet_change_impacts_calculation",
+      "ok": true,
+      "detail": {
+        "before": 13799.999999999998,
+        "after": 110.39999999999999,
+        "baseCabinet": "MG10 P2.6",
+        "altCabinet": "Teste 100"
+      }
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "generatedAt": "2026-03-19T22:04:18.169Z",
+  "suite": "cabling-core",
+  "summary": {
+    "total": 5,
+    "passed": 5,
+    "failed": 0
+  },
+  "checks": [
+    {
+      "name": "layout_has_blocks",
+      "ok": true,
+      "detail": {
+        "blocks": 6
+      }
+    },
+    {
+      "name": "layout_blocks_cover_all_gabinetes",
+      "ok": true
+    },
+    {
+      "name": "safe_limit_positive",
+      "ok": true,
+      "detail": {
+        "maxGabsPerCable": 17
+      }
+    },
+    {
+      "name": "deterministic_best_block",
+      "ok": true
+    },
+    {
+      "name": "bulk_layout_builder",
+      "ok": true
+    }
+  ]
+}

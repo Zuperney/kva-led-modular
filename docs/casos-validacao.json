@@ -1,0 +1,550 @@
+{
+  "description": "Casos de teste canonicos para validacao do core de calculo modular.",
+  "version": "1.1.0",
+  "constants": {
+    "limite_pixels_por_porta": 655360,
+    "breakers_comerciais_a": [
+      6, 10, 16, 20, 25, 32, 40, 50, 63, 80, 100, 125, 160, 200, 250, 320, 400
+    ],
+    "regra_arredondamento": {
+      "interface": "arredondar para menos",
+      "pdf": "valores reais"
+    }
+  },
+  "catalogo_processadoras": [
+    {
+      "nome": "MCTRL660",
+      "limite_pixels": 2600000
+    },
+    {
+      "nome": "VX1000",
+      "limite_pixels": 6500000
+    },
+    {
+      "nome": "VX2000 Pro",
+      "limite_pixels": 13000000
+    },
+    {
+      "nome": "Serie H (H9 5 cards x 16 portas)",
+      "limite_pixels": 52428800
+    }
+  ],
+  "scenarios": [
+    {
+      "id": 1,
+      "name": "Painel pequeno indoor",
+      "config": {
+        "tensao": 220,
+        "fase": 1,
+        "margem": 15,
+        "reservaCircuito": 20
+      },
+      "gabinete": {
+        "nome": "MG10 P2.6",
+        "largura_mm": 500,
+        "altura_mm": 500,
+        "px_w": 192,
+        "px_h": 192,
+        "peso_kg": 6.3,
+        "watts_max": 450,
+        "fp": 0.9
+      },
+      "input": {
+        "quantidade_colunas": 4,
+        "quantidade_linhas": 3
+      },
+      "expected": {
+        "gabinetes_totais": 12,
+        "dimensoes_m": {
+          "largura": 2,
+          "altura": 1.5
+        },
+        "pixels": {
+          "largura": 768,
+          "altura": 576,
+          "totais": 442368
+        },
+        "potencia_w": 6210,
+        "carga_kva": 6.9,
+        "corrente_a": 31.363636,
+        "disjuntor_minimo_a": 37.636364,
+        "disjuntor_comercial": 40,
+        "peso_kg": 75.6,
+        "processadora_sugerida": "MCTRL660"
+      }
+    },
+    {
+      "id": 2,
+      "name": "Backdrop palco medio",
+      "config": {
+        "tensao": 220,
+        "fase": 1,
+        "margem": 15,
+        "reservaCircuito": 25
+      },
+      "gabinete": {
+        "nome": "MG10 P2.6",
+        "largura_mm": 500,
+        "altura_mm": 500,
+        "px_w": 192,
+        "px_h": 192,
+        "peso_kg": 6.3,
+        "watts_max": 450,
+        "fp": 0.9
+      },
+      "input": {
+        "quantidade_colunas": 12,
+        "quantidade_linhas": 8
+      },
+      "expected": {
+        "gabinetes_totais": 96,
+        "dimensoes_m": {
+          "largura": 6,
+          "altura": 4
+        },
+        "pixels": {
+          "largura": 2304,
+          "altura": 1536,
+          "totais": 3538944
+        },
+        "potencia_w": 49680,
+        "carga_kva": 55.2,
+        "corrente_a": 250.909091,
+        "disjuntor_minimo_a": 313.636364,
+        "disjuntor_comercial": 320,
+        "peso_kg": 604.8,
+        "processadora_sugerida": "VX1000"
+      }
+    },
+    {
+      "id": 3,
+      "name": "Painel lateral arena",
+      "config": {
+        "tensao": 380,
+        "fase": 3,
+        "margem": 12,
+        "reservaCircuito": 25
+      },
+      "gabinete": {
+        "nome": "MG10 P2.6",
+        "largura_mm": 500,
+        "altura_mm": 500,
+        "px_w": 192,
+        "px_h": 192,
+        "peso_kg": 6.3,
+        "watts_max": 450,
+        "fp": 0.9
+      },
+      "input": {
+        "quantidade_colunas": 16,
+        "quantidade_linhas": 10
+      },
+      "expected": {
+        "gabinetes_totais": 160,
+        "dimensoes_m": {
+          "largura": 8,
+          "altura": 5
+        },
+        "pixels": {
+          "largura": 3072,
+          "altura": 1920,
+          "totais": 5898240
+        },
+        "potencia_w": 80640,
+        "carga_kva": 89.6,
+        "corrente_a": 136.133116,
+        "disjuntor_minimo_a": 170.166395,
+        "disjuntor_comercial": 200,
+        "peso_kg": 1008,
+        "processadora_sugerida": "VX1000"
+      }
+    },
+    {
+      "id": 4,
+      "name": "Painel central evento",
+      "config": {
+        "tensao": 380,
+        "fase": 3,
+        "margem": 15,
+        "reservaCircuito": 25
+      },
+      "gabinete": {
+        "nome": "MG10 P2.6",
+        "largura_mm": 500,
+        "altura_mm": 500,
+        "px_w": 192,
+        "px_h": 192,
+        "peso_kg": 6.3,
+        "watts_max": 450,
+        "fp": 0.9
+      },
+      "input": {
+        "quantidade_colunas": 20,
+        "quantidade_linhas": 12
+      },
+      "expected": {
+        "gabinetes_totais": 240,
+        "dimensoes_m": {
+          "largura": 10,
+          "altura": 6
+        },
+        "pixels": {
+          "largura": 3840,
+          "altura": 2304,
+          "totais": 8847360
+        },
+        "potencia_w": 124200,
+        "carga_kva": 138,
+        "corrente_a": 209.669308,
+        "disjuntor_minimo_a": 262.086635,
+        "disjuntor_comercial": 320,
+        "peso_kg": 1512,
+        "processadora_sugerida": "VX2000 Pro"
+      }
+    },
+    {
+      "id": 5,
+      "name": "Mega painel abertura",
+      "config": {
+        "tensao": 380,
+        "fase": 3,
+        "margem": 18,
+        "reservaCircuito": 25
+      },
+      "gabinete": {
+        "nome": "MG10 P2.6",
+        "largura_mm": 500,
+        "altura_mm": 500,
+        "px_w": 192,
+        "px_h": 192,
+        "peso_kg": 6.3,
+        "watts_max": 450,
+        "fp": 0.9
+      },
+      "input": {
+        "quantidade_colunas": 24,
+        "quantidade_linhas": 14
+      },
+      "expected": {
+        "gabinetes_totais": 336,
+        "dimensoes_m": {
+          "largura": 12,
+          "altura": 7
+        },
+        "pixels": {
+          "largura": 4608,
+          "altura": 2688,
+          "totais": 12386304
+        },
+        "potencia_w": 178416,
+        "carga_kva": 198.24,
+        "corrente_a": 301.194519,
+        "disjuntor_minimo_a": 376.493149,
+        "disjuntor_comercial": 400,
+        "peso_kg": 2116.8,
+        "processadora_sugerida": "VX2000 Pro"
+      }
+    },
+    {
+      "id": 6,
+      "name": "Plenaria dupla",
+      "config": {
+        "tensao": 380,
+        "fase": 3,
+        "margem": 15,
+        "reservaCircuito": 30
+      },
+      "gabinete": {
+        "nome": "MG10 P2.6",
+        "largura_mm": 500,
+        "altura_mm": 500,
+        "px_w": 192,
+        "px_h": 192,
+        "peso_kg": 6.3,
+        "watts_max": 450,
+        "fp": 0.9
+      },
+      "input": {
+        "quantidade_colunas": 30,
+        "quantidade_linhas": 16
+      },
+      "expected": {
+        "gabinetes_totais": 480,
+        "dimensoes_m": {
+          "largura": 15,
+          "altura": 8
+        },
+        "pixels": {
+          "largura": 5760,
+          "altura": 3072,
+          "totais": 17694720
+        },
+        "potencia_w": 248400,
+        "carga_kva": 276,
+        "corrente_a": 419.338617,
+        "disjuntor_minimo_a": 545.140202,
+        "disjuntor_comercial": "> 400",
+        "peso_kg": 3024,
+        "processadora_sugerida": "Serie H (H9 5 cards x 16 portas)"
+      }
+    },
+    {
+      "id": 7,
+      "name": "Show estadio",
+      "config": {
+        "tensao": 380,
+        "fase": 3,
+        "margem": 20,
+        "reservaCircuito": 30
+      },
+      "gabinete": {
+        "nome": "MG10 P2.6",
+        "largura_mm": 500,
+        "altura_mm": 500,
+        "px_w": 192,
+        "px_h": 192,
+        "peso_kg": 6.3,
+        "watts_max": 450,
+        "fp": 0.9
+      },
+      "input": {
+        "quantidade_colunas": 36,
+        "quantidade_linhas": 18
+      },
+      "expected": {
+        "gabinetes_totais": 648,
+        "dimensoes_m": {
+          "largura": 18,
+          "altura": 9
+        },
+        "pixels": {
+          "largura": 6912,
+          "altura": 3456,
+          "totais": 23887872
+        },
+        "potencia_w": 349920,
+        "carga_kva": 388.8,
+        "corrente_a": 590.720486,
+        "disjuntor_minimo_a": 767.936632,
+        "disjuntor_comercial": "> 400",
+        "peso_kg": 4082.4,
+        "processadora_sugerida": "Serie H (H9 5 cards x 16 portas)"
+      }
+    },
+    {
+      "id": 8,
+      "name": "Festival grande porte",
+      "config": {
+        "tensao": 380,
+        "fase": 3,
+        "margem": 20,
+        "reservaCircuito": 30
+      },
+      "gabinete": {
+        "nome": "MG10 P2.6",
+        "largura_mm": 500,
+        "altura_mm": 500,
+        "px_w": 192,
+        "px_h": 192,
+        "peso_kg": 6.3,
+        "watts_max": 450,
+        "fp": 0.9
+      },
+      "input": {
+        "quantidade_colunas": 42,
+        "quantidade_linhas": 20
+      },
+      "expected": {
+        "gabinetes_totais": 840,
+        "dimensoes_m": {
+          "largura": 21,
+          "altura": 10
+        },
+        "pixels": {
+          "largura": 8064,
+          "altura": 3840,
+          "totais": 30965760
+        },
+        "potencia_w": 453600,
+        "carga_kva": 504,
+        "corrente_a": 765.748778,
+        "disjuntor_minimo_a": 995.473412,
+        "disjuntor_comercial": "> 400",
+        "peso_kg": 5292,
+        "processadora_sugerida": "Serie H (H9 5 cards x 16 portas)"
+      }
+    },
+    {
+      "id": 9,
+      "name": "Circuito multiplos paineis",
+      "config": {
+        "tensao": 380,
+        "fase": 3,
+        "margem": 18,
+        "reservaCircuito": 30
+      },
+      "gabinete": {
+        "nome": "MG10 P2.6",
+        "largura_mm": 500,
+        "altura_mm": 500,
+        "px_w": 192,
+        "px_h": 192,
+        "peso_kg": 6.3,
+        "watts_max": 450,
+        "fp": 0.9
+      },
+      "input": {
+        "quantidade_colunas": 52,
+        "quantidade_linhas": 22
+      },
+      "expected": {
+        "gabinetes_totais": 1144,
+        "dimensoes_m": {
+          "largura": 26,
+          "altura": 11
+        },
+        "pixels": {
+          "largura": 9984,
+          "altura": 4224,
+          "totais": 42172416
+        },
+        "potencia_w": 607464,
+        "carga_kva": 674.96,
+        "corrente_a": 1025.495626,
+        "disjuntor_minimo_a": 1333.144313,
+        "disjuntor_comercial": "> 400",
+        "peso_kg": 7207.2,
+        "processadora_sugerida": "Serie H (H9 5 cards x 16 portas)"
+      }
+    },
+    {
+      "id": 10,
+      "name": "Abertura olimpica",
+      "config": {
+        "tensao": 380,
+        "fase": 3,
+        "margem": 18,
+        "reservaCircuito": 30
+      },
+      "gabinete": {
+        "nome": "MG10 P2.6",
+        "largura_mm": 500,
+        "altura_mm": 500,
+        "px_w": 192,
+        "px_h": 192,
+        "peso_kg": 6.3,
+        "watts_max": 450,
+        "fp": 0.9
+      },
+      "input": {
+        "quantidade_colunas": 64,
+        "quantidade_linhas": 24
+      },
+      "expected": {
+        "gabinetes_totais": 1536,
+        "dimensoes_m": {
+          "largura": 32,
+          "altura": 12
+        },
+        "pixels": {
+          "largura": 12288,
+          "altura": 4608,
+          "totais": 56623104
+        },
+        "potencia_w": 815616,
+        "carga_kva": 906.24,
+        "corrente_a": 1376.889231,
+        "disjuntor_minimo_a": 1789.956001,
+        "disjuntor_comercial": "> 400",
+        "peso_kg": 9676.8,
+        "processadora_sugerida": "2x Serie H (H9 5 cards x 16 portas)"
+      }
+    },
+    {
+      "id": 11,
+      "name": "Tela monumental",
+      "config": {
+        "tensao": 380,
+        "fase": 3,
+        "margem": 20,
+        "reservaCircuito": 35
+      },
+      "gabinete": {
+        "nome": "MG10 P2.6",
+        "largura_mm": 500,
+        "altura_mm": 500,
+        "px_w": 192,
+        "px_h": 192,
+        "peso_kg": 6.3,
+        "watts_max": 450,
+        "fp": 0.9
+      },
+      "input": {
+        "quantidade_colunas": 80,
+        "quantidade_linhas": 28
+      },
+      "expected": {
+        "gabinetes_totais": 2240,
+        "dimensoes_m": {
+          "largura": 40,
+          "altura": 14
+        },
+        "pixels": {
+          "largura": 15360,
+          "altura": 5376,
+          "totais": 82575360
+        },
+        "potencia_w": 1209600,
+        "carga_kva": 1344,
+        "corrente_a": 2041.996742,
+        "disjuntor_minimo_a": 2756.695601,
+        "disjuntor_comercial": "> 400",
+        "peso_kg": 14112,
+        "processadora_sugerida": "2x Serie H (H9 5 cards x 16 portas)"
+      }
+    },
+    {
+      "id": 12,
+      "name": "Estrutura extrema",
+      "config": {
+        "tensao": 380,
+        "fase": 3,
+        "margem": 20,
+        "reservaCircuito": 35
+      },
+      "gabinete": {
+        "nome": "MG10 P2.6",
+        "largura_mm": 500,
+        "altura_mm": 500,
+        "px_w": 192,
+        "px_h": 192,
+        "peso_kg": 6.3,
+        "watts_max": 450,
+        "fp": 0.9
+      },
+      "input": {
+        "quantidade_colunas": 96,
+        "quantidade_linhas": 32
+      },
+      "expected": {
+        "gabinetes_totais": 3072,
+        "dimensoes_m": {
+          "largura": 48,
+          "altura": 16
+        },
+        "pixels": {
+          "largura": 18432,
+          "altura": 6144,
+          "totais": 113246208
+        },
+        "potencia_w": 1658880,
+        "carga_kva": 1843.2,
+        "corrente_a": 2800.452674,
+        "disjuntor_minimo_a": 3780.61111,
+        "disjuntor_comercial": "> 400",
+        "peso_kg": 19353.6,
+        "processadora_sugerida": "3x Serie H (H9 5 cards x 16 portas)"
+      }
+    }
+  ]
+}

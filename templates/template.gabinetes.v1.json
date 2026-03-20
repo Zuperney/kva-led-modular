@@ -1,0 +1,135 @@
+{
+  "version": "template.gabinetes.v1",
+  "descricao": "Template para catalogo de gabinetes",
+  "instrucoes_simples": [
+    "Preencha cada gabinete dentro de gabinetes: [ ... ].",
+    "Use os campos: id, nome, largura_mm, altura_mm, px_w, px_h, peso_kg, watts_max, fp.",
+    "Nao use unidade nos numeros (ex.: 500 e nao 500mm).",
+    "Pode usar numero inteiro ou decimal (ex.: 6.3).",
+    "Se nao souber o FP, use 0.9.",
+    "Mantenha os nomes dos campos exatamente iguais a este modelo."
+  ],
+  "gabinetes": [
+    {
+      "id": "cab-000",
+      "nome": "Teste 100",
+      "largura_mm": 100,
+      "altura_mm": 100,
+      "px_w": 100,
+      "px_h": 100,
+      "peso_kg": 10,
+      "watts_max": 1,
+      "fp": 0.9
+    },
+    {
+      "id": "cab-001",
+      "nome": "MG10 P2.6",
+      "largura_mm": 500,
+      "altura_mm": 500,
+      "px_w": 192,
+      "px_h": 192,
+      "peso_kg": 6.3,
+      "watts_max": 125,
+      "fp": 0.9
+    },
+    {
+      "id": "cab-002",
+      "nome": "MG10 P3.9",
+      "largura_mm": 500,
+      "altura_mm": 1000,
+      "px_w": 192,
+      "px_h": 384,
+      "peso_kg": 12.6,
+      "watts_max": 190,
+      "fp": 0.9
+    },
+    {
+      "id": "cab-003",
+      "nome": "MG7 P2.9",
+      "largura_mm": 500,
+      "altura_mm": 500,
+      "px_w": 172,
+      "px_h": 172,
+      "peso_kg": 6.1,
+      "watts_max": 145,
+      "fp": 0.9
+    },
+    {
+      "id": "cab-004",
+      "nome": "Outdoor P4.8",
+      "largura_mm": 960,
+      "altura_mm": 960,
+      "px_w": 200,
+      "px_h": 200,
+      "peso_kg": 28.5,
+      "watts_max": 212,
+      "fp": 0.92
+    },
+    {
+      "id": "cab-005",
+      "nome": "Outdoor P5.7",
+      "largura_mm": 960,
+      "altura_mm": 960,
+      "px_w": 168,
+      "px_h": 168,
+      "peso_kg": 27.8,
+      "watts_max": 1050,
+      "fp": 0.92
+    },
+    {
+      "id": "cab-006",
+      "nome": "Rental 500x500 P2.9",
+      "largura_mm": 500,
+      "altura_mm": 500,
+      "px_w": 168,
+      "px_h": 168,
+      "peso_kg": 7.8,
+      "watts_max": 460,
+      "fp": 0.9
+    },
+    {
+      "id": "cab-007",
+      "nome": "Rental 500x1000 P3.9",
+      "largura_mm": 500,
+      "altura_mm": 1000,
+      "px_w": 128,
+      "px_h": 256,
+      "peso_kg": 14.9,
+      "watts_max": 860,
+      "fp": 0.9
+    },
+    {
+      "id": "cab-008",
+      "nome": "Fine Pitch P1.9",
+      "largura_mm": 600,
+      "altura_mm": 337,
+      "px_w": 320,
+      "px_h": 180,
+      "peso_kg": 8.4,
+      "watts_max": 520,
+      "fp": 0.95
+    },
+    {
+      "id": "cab-009",
+      "nome": "Fine Pitch P1.5",
+      "largura_mm": 600,
+      "altura_mm": 337,
+      "px_w": 384,
+      "px_h": 216,
+      "peso_kg": 8.8,
+      "watts_max": 560,
+      "fp": 0.95
+    },
+    {
+      "id": "cab-010",
+      "nome": "Indoor P2.0 640x480",
+      "largura_mm": 640,
+      "altura_mm": 480,
+      "px_w": 320,
+      "px_h": 240,
+      "peso_kg": 9.6,
+      "watts_max": 600,
+      "fp": 0.9
+    }
+  ]
+}
