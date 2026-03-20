@@ -1,4 +1,4 @@
-# Maintenance Guide - KVA LED Modular
+# Maintenance Guide - LedLab CORE
 
 ## Objetivo
 

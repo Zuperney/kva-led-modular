@@ -28,7 +28,7 @@ export function bindProjectEvents(params) {
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = "projeto-kva-modular.json";
+    link.download = "projeto-ledlab-core.json";
     link.click();
     URL.revokeObjectURL(url);
 

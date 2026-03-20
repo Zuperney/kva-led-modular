@@ -1,4 +1,4 @@
-# Guia rapido de impressao - KVA LED Modular
+# Guia rapido de impressao - LedLab CORE
 
 ## Objetivo
 

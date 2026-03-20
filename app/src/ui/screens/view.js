@@ -18,6 +18,7 @@ export function renderScreensView(params) {
         String(screen.id) +
         '">Remover</button>' +
         "</div>" +
+        '<div class="screen-config-row">' +
         '<div class="screen-grid-edit">' +
         '<input class="screen-input" type="number" min="1" data-action="cols" data-screen-id="' +
         String(screen.id) +
@@ -30,11 +31,12 @@ export function renderScreensView(params) {
         String(screen.quantidade_linhas) +
         '">' +
         "</div>" +
-        '<select class="screen-select" data-action="cabinet" data-screen-id="' +
+        '<select class="screen-select screen-cabinet-select" data-action="cabinet" data-screen-id="' +
         String(screen.id) +
         '">' +
         renderCabinetOptions(catalog, screen.gabinete?.nome, escapeHtml) +
         "</select>" +
+        "</div>" +
         '<span class="screen-meta">' +
         formatInteger(screen.quantidade_colunas * screen.quantidade_linhas) +
         " gabinetes | " +

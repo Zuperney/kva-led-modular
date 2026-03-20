@@ -125,7 +125,7 @@ Este é o formato gerado pelo botão **"Exportar Projeto"**. Use-o para salvar e
   "version": "project.v1",
   "meta": {
     "name": "Evento Show de Verão",
-    "source": "kva-led-modular"
+    "source": "ledlab-core"
   },
   "config": {
     "tensao": 220,

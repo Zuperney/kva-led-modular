@@ -17,9 +17,18 @@ function renderCabinetCards(container, cabinets, escapeHtml) {
         "<strong>" +
         escapeHtml(cab.nome) +
         "</strong>" +
-        '<button class="btn-delete" data-action="delete-cabinet" data-cabinet-id="' +
+        '<div class="cabinet-item-actions">' +
+        '<button class="cabinet-action-btn cabinet-action-btn--edit" data-action="edit-cabinet" data-cabinet-id="' +
         escapeHtml(cab.id) +
-        '">Remover</button>' +
+        '" aria-label="Editar gabinete" title="Editar">' +
+        '<i data-lucide="square-pen" aria-hidden="true"></i>' +
+        "</button>" +
+        '<button class="cabinet-action-btn cabinet-action-btn--delete" data-action="delete-cabinet" data-cabinet-id="' +
+        escapeHtml(cab.id) +
+        '" aria-label="Excluir gabinete" title="Excluir">' +
+        '<i data-lucide="trash-2" aria-hidden="true"></i>' +
+        "</button>" +
+        "</div>" +
         "</div>" +
         '<span class="screen-meta">' +
         cab.largura_mm +

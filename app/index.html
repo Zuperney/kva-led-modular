@@ -4,21 +4,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>KVA LED Modular</title>
+  <title>LedLab CORE</title>
   <link rel="stylesheet" href="./src/styles/main.css">
 </head>
 
 <body>
   <div class="shell">
     <header class="hero">
-      <h1>Dimensionamento LED MG10 P2.6</h1>
+      <h1>LedLab CORE</h1>
       <p>
         Base modular da aplicacao. Esta interface preserva o estilo visual do projeto atual
         enquanto a logica e migrada para modulos independentes.
       </p>
       <div class="hero-tags">
         <span>Fase 1: Estrutura Modular</span>
-        <span>Fonte de verdade: KVA</span>
+        <span>Fonte de verdade: LedLab CORE</span>
         <span>Limite por porta: 655360 px</span>
       </div>
     </header>
@@ -33,17 +33,11 @@
       <article class="stat"><span class="stat-label">Pixels Totais</span>
         <div class="stat-value" id="dashPx">0</div>
       </article>
-      <article class="stat"><span class="stat-label">Potencia Real</span>
-        <div class="stat-value" id="dashWatts">0 W</div>
-      </article>
       <article class="stat"><span class="stat-label">Carga Aparente</span>
         <div class="stat-value" id="dashKva">0.00 kVA</div>
       </article>
       <article class="stat"><span class="stat-label">Corrente por Fase</span>
         <div class="stat-value" id="dashAmp">0.00 A</div>
-      </article>
-      <article class="stat"><span class="stat-label">Disjuntor Sugerido</span>
-        <div class="stat-value" id="dashBreaker">-</div>
       </article>
     </section>
 
@@ -62,7 +56,9 @@
           <div class="config-card">
             <div class="config-card-head">
               <h3>Parametros Eletricos</h3>
-              <button id="btnOpenElectricalConfig" class="btn-icon" type="button" aria-label="Abrir configuracoes avancadas">&#9881;</button>
+              <button id="btnOpenElectricalConfig" class="btn-icon" type="button" aria-label="Abrir configuracoes avancadas">
+                <i data-lucide="settings-2" aria-hidden="true"></i>
+              </button>
             </div>
             <div class="form-grid-two">
               <div class="config-field">
@@ -85,7 +81,9 @@
             <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="electricalConfigTitle">
               <div class="modal-head">
                 <h3 id="electricalConfigTitle">Configuracoes avancadas</h3>
-                <button id="btnCloseElectricalConfig" class="btn-icon" type="button" aria-label="Fechar configuracoes">x</button>
+                <button id="btnCloseElectricalConfig" class="btn-icon" type="button" aria-label="Fechar configuracoes">
+                  <i data-lucide="x" aria-hidden="true"></i>
+                </button>
               </div>
               <div class="modal-grid">
                 <div class="config-field">
@@ -299,8 +297,8 @@
           <section class="report-sheet" id="reportSheet">
             <header class="report-header">
               <div>
-                <h2>Relatorio Tecnico - KVA LED Modular</h2>
-                <p class="report-subtitle">Base de calculo oficial KVA | Politica de UI: arredondamento para menos</p>
+                <h2>Relatorio Tecnico - LedLab CORE</h2>
+                <p class="report-subtitle">Base de calculo oficial LedLab CORE | Politica de UI: arredondamento para menos</p>
               </div>
               <div class="report-meta">
                 <p><strong>Gerado em:</strong> <span id="rptGeneratedAt">-</span></p>
@@ -384,8 +382,12 @@
               <h3>Cabeamento (estimado)</h3>
               <div id="cablingSummary" class="cabling-summary"></div>
               <div class="canvas-controls">
-                <button id="btnZoomIn" class="btn-icon" title="Aproximar">+</button>
-                <button id="btnZoomOut" class="btn-icon" title="Afastar">-</button>
+                <button id="btnZoomIn" class="btn-icon" title="Aproximar" aria-label="Aproximar">
+                  <i data-lucide="zoom-in" aria-hidden="true"></i>
+                </button>
+                <button id="btnZoomOut" class="btn-icon" title="Afastar" aria-label="Afastar">
+                  <i data-lucide="zoom-out" aria-hidden="true"></i>
+                </button>
                 <button id="btnZoomReset" class="btn-icon" title="Resetar zoom">100%</button>
               </div>
               <canvas id="cablingCanvas" width="900" height="400"></canvas>
@@ -427,7 +429,9 @@
                     <button type="button" class="testcard-color-swatch" data-color="#111827" style="--swatch:#111827" title="Carbon"></button>
                     <button type="button" class="testcard-color-swatch" data-color="#3f3f46" style="--swatch:#3f3f46" title="Grafite"></button>
                     <button type="button" class="testcard-color-swatch" data-color="#0b3b2e" style="--swatch:#0b3b2e" title="Verde escuro"></button>
-                    <button type="button" class="testcard-color-picker" data-action="open-color" data-input-id="testCardBg" title="Conta-gotas"></button>
+                    <button type="button" class="testcard-color-picker" data-action="open-color" data-input-id="testCardBg" title="Conta-gotas" aria-label="Conta-gotas">
+                      <i data-lucide="pipette" aria-hidden="true"></i>
+                    </button>
                   </div>
                   <input id="testCardBg" class="screen-input testcard-color-input-native" type="color" value="#0f172a">
                 </div>
@@ -439,7 +443,9 @@
                     <button type="button" class="testcard-color-swatch" data-color="#fef3c7" style="--swatch:#fef3c7" title="Creme"></button>
                     <button type="button" class="testcard-color-swatch" data-color="#cbd5e1" style="--swatch:#cbd5e1" title="Prata"></button>
                     <button type="button" class="testcard-color-swatch" data-color="#93c5fd" style="--swatch:#93c5fd" title="Azul claro"></button>
-                    <button type="button" class="testcard-color-picker" data-action="open-color" data-input-id="testCardFg" title="Conta-gotas"></button>
+                    <button type="button" class="testcard-color-picker" data-action="open-color" data-input-id="testCardFg" title="Conta-gotas" aria-label="Conta-gotas">
+                      <i data-lucide="pipette" aria-hidden="true"></i>
+                    </button>
                   </div>
                   <input id="testCardFg" class="screen-input testcard-color-input-native" type="color" value="#e5e7eb">
                 </div>
@@ -454,7 +460,9 @@
                     <button type="button" class="testcard-color-swatch" data-color="#ef4444" style="--swatch:#ef4444" title="Vermelho"></button>
                     <button type="button" class="testcard-color-swatch" data-color="#22c55e" style="--swatch:#22c55e" title="Verde"></button>
                     <button type="button" class="testcard-color-swatch" data-color="#a78bfa" style="--swatch:#a78bfa" title="Violeta"></button>
-                    <button type="button" class="testcard-color-picker" data-action="open-color" data-input-id="testCardAccent" title="Conta-gotas"></button>
+                    <button type="button" class="testcard-color-picker" data-action="open-color" data-input-id="testCardAccent" title="Conta-gotas" aria-label="Conta-gotas">
+                      <i data-lucide="pipette" aria-hidden="true"></i>
+                    </button>
                   </div>
                   <input id="testCardAccent" class="screen-input testcard-color-input-native" type="color" value="#22d3ee">
                 </div>
@@ -484,8 +492,12 @@
             </section>
 
             <div class="canvas-controls">
-              <button id="btnTestCardZoomIn" class="btn-icon" title="Aproximar">+</button>
-              <button id="btnTestCardZoomOut" class="btn-icon" title="Afastar">-</button>
+              <button id="btnTestCardZoomIn" class="btn-icon" title="Aproximar" aria-label="Aproximar">
+                <i data-lucide="zoom-in" aria-hidden="true"></i>
+              </button>
+              <button id="btnTestCardZoomOut" class="btn-icon" title="Afastar" aria-label="Afastar">
+                <i data-lucide="zoom-out" aria-hidden="true"></i>
+              </button>
               <button id="btnTestCardZoomReset" class="btn-icon" title="Resetar zoom e pan">100%</button>
             </div>
             <canvas id="testCardCanvas" width="900" height="400"></canvas>
@@ -508,6 +520,7 @@
     </section>
   </div>
 
+  <script src="https://unpkg.com/lucide@latest"></script>
   <script type="module" src="./src/main.js"></script>
 </body>
 

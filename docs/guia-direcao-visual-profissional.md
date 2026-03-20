@@ -1,6 +1,6 @@
 # Guia de Direcao Visual Profissional
 
-Este guia define uma direcao visual nova para o KVA LED Modular inspirada no nivel de acabamento de produtos como o Ontime, mas sem copiar codigo, assets ou estilos diretamente.
+Este guia define uma direcao visual nova para o LedLab CORE inspirada no nivel de acabamento de produtos como o Ontime, mas sem copiar codigo, assets ou estilos diretamente.
 
 Objetivo:
 
@@ -597,7 +597,7 @@ Use apenas a referencia de sensacao visual:
 - tipografia consistente
 - acabamento de produto profissional
 
-A implementacao deve ser original e adaptada ao KVA LED Modular.
+A implementacao deve ser original e adaptada ao LedLab CORE.
 
 ---
 

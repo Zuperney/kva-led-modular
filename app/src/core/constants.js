@@ -1,5 +1,5 @@
 export const APP_META = {
-  name: "KVA LED Modular",
+  name: "LedLab CORE",
   version: "0.2.0-phase2",
 };
 

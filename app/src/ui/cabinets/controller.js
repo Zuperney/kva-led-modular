@@ -14,6 +14,36 @@ export function bindCabinetEvents(params) {
     clearCabinetForm,
   } = params;
 
+  let editingCabinetId = null;
+
+  function setCabinetFormFromRecord(cabinet) {
+    if (!cabinet) return;
+    if (refs.cabNome) refs.cabNome.value = String(cabinet.nome || "");
+    if (refs.cabLargura)
+      refs.cabLargura.value = String(cabinet.largura_mm || "");
+    if (refs.cabAltura) refs.cabAltura.value = String(cabinet.altura_mm || "");
+    if (refs.cabPxW) refs.cabPxW.value = String(cabinet.px_w || "");
+    if (refs.cabPxH) refs.cabPxH.value = String(cabinet.px_h || "");
+    if (refs.cabPeso) refs.cabPeso.value = String(cabinet.peso_kg || "");
+    if (refs.cabWatts) refs.cabWatts.value = String(cabinet.watts_max || "");
+    if (refs.cabFp) refs.cabFp.value = String(cabinet.fp || "");
+  }
+
+  function resetCabinetEditMode() {
+    editingCabinetId = null;
+    if (refs.btnAddCabinet) {
+      refs.btnAddCabinet.textContent = "Cadastrar";
+    }
+  }
+
+  function enableCabinetEditMode(cabinet) {
+    editingCabinetId = cabinet?.id || null;
+    setCabinetFormFromRecord(cabinet);
+    if (refs.btnAddCabinet) {
+      refs.btnAddCabinet.textContent = "Salvar";
+    }
+  }
+
   refs.btnImportCabinets?.addEventListener("click", () => {
     refs.importCabinetInput?.click();
   });
@@ -67,23 +97,55 @@ export function bindCabinetEvents(params) {
     }
 
     const ui = getUi();
-    const merged = mergeCatalog(ui.cabinets, [cabinet]);
+    const wasEditing = Boolean(editingCabinetId);
+
+    const merged = editingCabinetId
+      ? ui.cabinets.map((existing) =>
+          existing.id === editingCabinetId
+            ? { ...cabinet, id: editingCabinetId }
+            : existing,
+        )
+      : mergeCatalog(ui.cabinets, [cabinet]);
+
     persistCabinets(merged);
     clearCabinetForm(refs);
+    resetCabinetEditMode();
     setUi({ cabinets: merged });
     setState(normalizeScreensWithCatalog(getState(), merged));
 
     if (refs.migrationStatus) {
-      refs.migrationStatus.textContent = "Gabinete cadastrado no catalogo local.";
+      refs.migrationStatus.textContent = wasEditing
+        ? "Gabinete atualizado no catalogo local."
+        : "Gabinete cadastrado no catalogo local.";
     }
   });
 
   refs.cabinetsList?.addEventListener("click", (event) => {
     const target = event.target;
-    if (!(target instanceof HTMLElement)) return;
-    if (target.dataset.action !== "delete-cabinet") return;
+    if (!(target instanceof Element)) return;
 
-    const cabinetId = target.dataset.cabinetId;
+    const actionButton = target.closest("button[data-action]");
+    if (!(actionButton instanceof HTMLButtonElement)) return;
+
+    const action = actionButton.dataset.action;
+    const cabinetId = actionButton.dataset.cabinetId;
+
+    if (!cabinetId) return;
+
+    if (action === "edit-cabinet") {
+      const ui = getUi();
+      const current = ui.cabinets.find((cab) => cab.id === cabinetId);
+      if (!current) return;
+      enableCabinetEditMode(current);
+      if (refs.migrationStatus) {
+        refs.migrationStatus.textContent =
+          "Modo edicao ativo: ajuste os campos e clique em Salvar.";
+      }
+      return;
+    }
+
+    if (action !== "delete-cabinet") return;
+
     const ui = getUi();
     const nextCatalog = ui.cabinets.filter((cab) => cab.id !== cabinetId);
 
@@ -93,6 +155,11 @@ export function bindCabinetEvents(params) {
           "O catalogo precisa ter ao menos um gabinete.";
       }
       return;
+    }
+
+    if (editingCabinetId === cabinetId) {
+      clearCabinetForm(refs);
+      resetCabinetEditMode();
     }
 
     persistCabinets(nextCatalog);

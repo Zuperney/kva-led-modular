@@ -16,6 +16,12 @@ import {
 } from "./shared/validation.js";
 import { createInitialUiState } from "./state.js";
 
+function refreshIcons() {
+  const lucide = globalThis?.lucide;
+  if (!lucide || typeof lucide.createIcons !== "function") return;
+  lucide.createIcons();
+}
+
 export function bootstrapApp() {
   const refs = createUiRefs();
 
@@ -47,12 +53,15 @@ export function bootstrapApp() {
       state = nextState;
       saveProject(state);
       renderAll(refs, state, ui);
+      refreshIcons();
     },
     (partialUi) => {
       Object.assign(ui, partialUi);
       renderAll(refs, state, ui);
+      refreshIcons();
     },
   );
 
   renderAll(refs, state, ui);
+  refreshIcons();
 }
