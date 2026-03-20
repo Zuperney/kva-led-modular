@@ -4,6 +4,7 @@ const RUNTIME_CACHE = "ledlab-runtime-v1";
 const APP_SHELL = [
   "./",
   "./index.html",
+  "./main.html",
   "./manifest.webmanifest",
   "./src/main.js",
   "./src/styles/main.css",
