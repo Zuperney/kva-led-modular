@@ -2,7 +2,7 @@ import { bootstrapApp } from "./ui/bootstrap.js";
 
 bootstrapApp();
 
-setupMobileTopBehavior();
+setupMobileTabsMenu();
 
 if ("serviceWorker" in navigator && window.location.protocol !== "file:") {
   window.addEventListener("load", () => {
@@ -12,39 +12,54 @@ if ("serviceWorker" in navigator && window.location.protocol !== "file:") {
   });
 }
 
-function setupMobileTopBehavior() {
-  const toggle = document.getElementById("btnTopCompactToggle");
-  if (!(toggle instanceof HTMLButtonElement)) return;
+function setupMobileTabsMenu() {
+  const toggle = document.getElementById("btnTabsMenu");
+  const tabsNav = document.getElementById("tabsNav");
+  if (
+    !(toggle instanceof HTMLButtonElement) ||
+    !(tabsNav instanceof HTMLElement)
+  ) {
+    return;
+  }
 
   const mediaQuery = window.matchMedia("(max-width: 980px)");
 
-  const syncToggleState = () => {
-    const expanded = document.body.classList.contains("mobile-top-expanded");
-    toggle.textContent = expanded ? "Ocultar topo" : "Mostrar topo";
-    toggle.setAttribute("aria-expanded", expanded ? "true" : "false");
+  const syncState = () => {
+    const open = document.body.classList.contains("mobile-tabs-open");
+    toggle.setAttribute("aria-expanded", open ? "true" : "false");
+  };
+
+  const closeTabsMenu = () => {
+    document.body.classList.remove("mobile-tabs-open");
+    syncState();
   };
 
   const applyViewportState = () => {
-    if (mediaQuery.matches) {
-      document.body.classList.add("mobile-top-compact");
-    } else {
-      document.body.classList.remove("mobile-top-compact");
-      document.body.classList.remove("mobile-top-expanded");
+    if (!mediaQuery.matches) {
+      closeTabsMenu();
     }
-    syncToggleState();
+    syncState();
   };
 
   toggle.addEventListener("click", () => {
-    document.body.classList.toggle("mobile-top-expanded");
-    syncToggleState();
+    if (!mediaQuery.matches) return;
+    document.body.classList.toggle("mobile-tabs-open");
+    syncState();
   });
 
-  document.querySelectorAll(".category-nav [data-view]").forEach((button) => {
+  tabsNav.querySelectorAll("[data-view]").forEach((button) => {
     button.addEventListener("click", () => {
       if (!mediaQuery.matches) return;
-      document.body.classList.remove("mobile-top-expanded");
-      syncToggleState();
+      closeTabsMenu();
     });
+  });
+
+  document.addEventListener("click", (event) => {
+    if (!mediaQuery.matches) return;
+    const target = event.target;
+    if (!(target instanceof Node)) return;
+    if (toggle.contains(target) || tabsNav.contains(target)) return;
+    closeTabsMenu();
   });
 
   if (typeof mediaQuery.addEventListener === "function") {

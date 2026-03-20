@@ -35,6 +35,7 @@ export function renderAll(refs, state, uiState) {
       container: refs.screensList,
       screens: state.screens,
       activeView: uiState.activeView,
+      screenEditorId: uiState.screenEditorId,
       catalog: uiState.cabinets,
       escapeHtml,
       formatInteger,

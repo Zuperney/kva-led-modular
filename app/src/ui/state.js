@@ -4,6 +4,7 @@ export function createInitialUiState(state, params) {
   return {
     activeView: "cabling",
     selectedScreenId: state.screens[0]?.id || null,
+    screenEditorId: null,
     cabinets: loadCabinetCatalog(state),
     electricalSystem: loadElectricalSystemPreference(state.config),
     cablingOrientation: "horizontal",

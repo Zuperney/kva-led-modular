@@ -20,23 +20,42 @@ export function bindScreenEvents(params) {
       ui.cabinets[0] ||
       createDefaultScreen("tmp").gabinete;
 
+    const newScreen = createDefaultScreen("Tela " + nextIndex, selectedCabinet);
+
     const next = {
       ...current,
-      screens: current.screens.concat(
-        createDefaultScreen("Tela " + nextIndex, selectedCabinet),
-      ),
+      screens: [newScreen].concat(current.screens),
     };
 
     setState(next);
+    setUi({
+      selectedScreenId: newScreen.id,
+      screenEditorId: newScreen.id,
+    });
   });
 
   refs.screensList?.addEventListener("click", (event) => {
     const target = event.target;
     if (!(target instanceof HTMLElement)) return;
-    if (target.dataset.action !== "delete") return;
+    const action = target.dataset.action;
+    if (!action) return;
+
+    if (action === "toggle-edit") {
+      const screenId = target.dataset.screenId;
+      const ui = getUi();
+      const isOpen = String(ui.screenEditorId || "") === String(screenId || "");
+      setUi({
+        selectedScreenId: screenId || null,
+        screenEditorId: isOpen ? null : screenId || null,
+      });
+      return;
+    }
+
+    if (action !== "delete") return;
 
     const screenId = target.dataset.screenId;
     const current = getState();
+    const ui = getUi();
     const filtered = current.screens.filter(
       (screen) => String(screen.id) !== String(screenId),
     );
@@ -50,7 +69,13 @@ export function bindScreenEvents(params) {
     }
 
     setState({ ...current, screens: filtered });
-    setUi({ selectedScreenId: filtered[0]?.id || null });
+    setUi({
+      selectedScreenId: filtered[0]?.id || null,
+      screenEditorId:
+        String(ui.screenEditorId || "") === String(screenId || "")
+          ? null
+          : ui.screenEditorId || null,
+    });
   });
 
   refs.screensList?.addEventListener("change", (event) => {

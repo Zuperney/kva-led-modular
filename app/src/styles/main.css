@@ -82,18 +82,28 @@ body {
   letter-spacing: 0.02em;
 }
 
-.hero-toggle {
+.tabs-menu-toggle {
   display: none;
-  margin-top: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  background: rgba(255, 255, 255, 0.12);
-  color: #fff;
-  min-height: 38px;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  margin: 8px 0;
+  border: 1px solid rgba(15, 118, 110, 0.25);
+  background: rgba(15, 118, 110, 0.1);
+  color: var(--brand-strong);
+  min-height: 40px;
   padding: 8px 12px;
   border-radius: 10px;
   font-size: 0.78rem;
+  font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
+}
+
+.tabs-menu-toggle i {
+  width: 16px;
+  height: 16px;
 }
 
 .hero p {
@@ -232,6 +242,29 @@ body {
   margin-bottom: 12px;
 }
 
+.project-quick-actions {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.btn-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.btn-action i {
+  width: 16px;
+  height: 16px;
+  stroke-width: 2;
+  flex: 0 0 auto;
+}
+
+.btn-action span {
+  white-space: nowrap;
+}
+
 button {
   min-height: 48px;
   border: 1px solid transparent;
@@ -312,6 +345,31 @@ button:hover {
   grid-template-columns: 1fr auto;
   align-items: center;
   gap: 6px;
+}
+
+.screen-item-summary {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.screen-item-actions {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.btn-screen-action {
+  min-height: 34px;
+  padding: 6px 9px;
+  font-size: 0.78rem;
+  border-radius: 10px;
+}
+
+.screen-item-editor {
+  margin-top: 8px;
+  display: grid;
+  gap: 8px;
 }
 
 .screen-config-row {
@@ -432,6 +490,10 @@ th {
 .actions-inline {
   display: flex;
   gap: 10px;
+}
+
+.report-print-footer {
+  margin-top: 14px;
 }
 
 .report-sheet {
@@ -1300,30 +1362,70 @@ canvas:active {
     line-height: 1.2;
   }
 
-  .hero-toggle {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  body.mobile-top-compact .hero p,
-  body.mobile-top-compact .hero-tags,
-  body.mobile-top-compact .stats {
+  .hero p,
+  .hero-tags,
+  .stats {
     display: none;
   }
 
-  body.mobile-top-compact.mobile-top-expanded .hero p,
-  body.mobile-top-compact.mobile-top-expanded .hero-tags,
-  body.mobile-top-compact.mobile-top-expanded .stats {
-    display: block;
+  .tabs-menu-toggle {
+    display: inline-flex;
   }
 
-  body.mobile-top-compact.mobile-top-expanded .stats {
+  .category-nav {
+    display: none;
+    grid-template-columns: 1fr;
+    gap: 8px;
+    margin-bottom: 10px;
+    position: static;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 8px;
+    box-shadow: var(--shadow-sm);
+    backdrop-filter: none;
+  }
+
+  body.mobile-tabs-open .category-nav {
     display: grid;
+  }
+
+  .category-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .nav-chip {
+    width: 100%;
+    justify-content: flex-start;
+    white-space: normal;
+    min-height: 40px;
+    padding: 8px 10px;
+    font-size: 0.82rem;
   }
 
   .actions {
     grid-template-columns: 1fr;
+  }
+
+  .project-quick-actions {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  .project-quick-actions .btn-action {
+    min-height: 42px;
+    padding: 8px 6px;
+    border-radius: 10px;
+    gap: 0;
+  }
+
+  .project-quick-actions .btn-action span {
+    display: none;
+  }
+
+  .project-quick-actions .btn-action i {
+    width: 18px;
+    height: 18px;
   }
 
   .panel {
@@ -1363,35 +1465,24 @@ canvas:active {
     grid-template-columns: repeat(2, minmax(120px, 1fr));
   }
 
-  .category-nav {
-    display: flex;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    gap: 8px;
-    padding: 2px 2px 8px;
-    margin-bottom: 8px;
-    position: sticky;
-    top: 6px;
-    z-index: 20;
-    backdrop-filter: blur(8px);
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-  }
-
-  .category-nav::-webkit-scrollbar {
-    display: none;
-  }
-
-  .nav-chip {
-    flex: 0 0 auto;
-    white-space: nowrap;
-    min-height: 40px;
-    padding: 8px 12px;
-    font-size: 0.82rem;
-  }
-
   .screen-config-row {
     grid-template-columns: 1fr;
+  }
+
+  .screen-item-head {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .screen-item-actions {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .btn-screen-action,
+  .btn-delete {
+    width: 100%;
   }
 
   .report-page,
@@ -1449,6 +1540,7 @@ canvas:active {
 
   .hero,
   .stats,
+  .tabs-menu-toggle,
   .category-nav,
   .panel:first-child,
   .report-actions,
