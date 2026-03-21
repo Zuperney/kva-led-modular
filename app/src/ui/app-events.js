@@ -43,30 +43,55 @@ function openReportPdfFallback(refs) {
   const cssHref = new URL("./src/styles/main.css", window.location.href).href;
 
   const clone = source.cloneNode(true);
-  const sourceCanvases = source.querySelectorAll(
-    "canvas[data-report-screen-id]",
-  );
-  const cloneCanvases = clone.querySelectorAll("canvas[data-report-screen-id]");
+  const sourceCanvasById = new Map();
+  source
+    .querySelectorAll("canvas[data-report-screen-id]")
+    .forEach((node) => {
+      if (!(node instanceof HTMLCanvasElement)) return;
+      const id = String(node.dataset.reportScreenId || "");
+      if (!id || sourceCanvasById.has(id)) return;
+      sourceCanvasById.set(id, node);
+    });
 
-  sourceCanvases.forEach((sourceCanvas, index) => {
-    const cloneCanvas = cloneCanvases[index];
-    if (!(cloneCanvas instanceof HTMLCanvasElement)) return;
-    if (!(sourceCanvas instanceof HTMLCanvasElement)) return;
+  const sourceSnapshotById = new Map();
+  source
+    .querySelectorAll("img[data-print-snapshot-for]")
+    .forEach((node) => {
+      if (!(node instanceof HTMLImageElement)) return;
+      const id = String(node.dataset.printSnapshotFor || "");
+      if (!id || sourceSnapshotById.has(id)) return;
+      sourceSnapshotById.set(id, node);
+    });
 
-    let dataUrl = "";
-    try {
-      dataUrl = sourceCanvas.toDataURL("image/png");
-    } catch {
-      dataUrl = "";
+  clone.querySelectorAll("canvas[data-report-screen-id]").forEach((node) => {
+    if (!(node instanceof HTMLCanvasElement)) return;
+    const screenId = String(node.dataset.reportScreenId || "");
+
+    const snapshotImage = sourceSnapshotById.get(screenId);
+    let dataUrl =
+      snapshotImage instanceof HTMLImageElement
+        ? String(snapshotImage.src || "")
+        : "";
+
+    if (!dataUrl) {
+      const sourceCanvas = sourceCanvasById.get(screenId);
+      if (sourceCanvas instanceof HTMLCanvasElement) {
+        try {
+          dataUrl = sourceCanvas.toDataURL("image/png");
+        } catch {
+          dataUrl = "";
+        }
+      }
     }
 
     if (!dataUrl) return;
 
     const image = document.createElement("img");
     image.src = dataUrl;
-    image.className = sourceCanvas.className + " report-detail-canvas-print";
+    image.className = node.className + " report-detail-canvas-print";
     image.alt = "Mapa de cabeamento da tela";
-    cloneCanvas.replaceWith(image);
+    image.dataset.reportScreenId = screenId;
+    node.replaceWith(image);
   });
 
   const win = window.open(
