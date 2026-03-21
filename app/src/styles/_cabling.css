@@ -1,0 +1,219 @@
+.cabling-mobile-quick {
+  display: none;
+}
+
+.cabling-mobile-quick.screen-only {
+  display: none;
+}
+
+.canvas-grid-cabling {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.screen-list-cabling {
+  margin-top: 12px;
+}
+
+.screen-list-cabling h3 {
+  margin: 0 0 8px;
+  color: var(--brand-strong);
+  font-size: 0.95rem;
+}
+
+#cablingScreensList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+#cablingScreensList button {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 0.85rem;
+}
+
+#cablingScreensList button.active {
+  background: var(--brand);
+  color: #fff;
+  border-color: var(--brand);
+}
+
+.cabling-summary {
+  display: grid;
+  gap: 8px;
+  margin-top: 10px;
+  padding: 10px 0;
+}
+
+.cabling-summary-item {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 8px 10px;
+  background: var(--surface);
+  display: grid;
+  gap: 4px;
+}
+
+.cabling-summary-title {
+  font-weight: 700;
+  color: var(--brand-strong);
+  font-size: 0.9rem;
+}
+
+.cabling-summary-meta {
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.35;
+}
+
+.cabling-summary-status {
+  margin-top: 4px;
+  padding-top: 4px;
+  border-top: 1px dashed var(--line);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cabling-summary-status-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.cabling-summary-status-value {
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 6px;
+  color: var(--ink);
+}
+
+.cabling-summary-item--risk {
+  background-color: #fffbeb;
+  border-color: #f59e0b;
+}
+
+.cabling-summary-item--risk .cabling-summary-status-value {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.cabling-summary-item--overloaded {
+  background-color: #fef2f2;
+  border-color: #ef4444;
+}
+
+.cabling-summary-item--overloaded .cabling-summary-status-value {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+.canvas-card {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 10px;
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow: visible;
+}
+
+.canvas-card h3 {
+  margin: 0 0 8px;
+  color: var(--brand-strong);
+  font-size: 0.95rem;
+}
+
+.canvas-stage {
+  position: relative;
+}
+
+.canvas-stage-cabling {
+  border: 1px dashed var(--line-strong);
+  border-radius: 10px;
+  background: #f8fafc;
+  overflow: hidden;
+}
+
+.canvas-controls {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.canvas-controls--overlay {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+  margin-bottom: 0;
+}
+
+.canvas-controls .btn-icon {
+  width: 28px;
+  height: 28px;
+  font-size: 0.9rem;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  color: var(--brand-strong);
+}
+
+.canvas-controls .btn-icon:hover {
+  background: rgba(15, 118, 110, 0.12);
+}
+
+.canvas-controls .btn-icon:focus-visible {
+  outline: 2px solid rgba(15, 118, 110, 0.45);
+  outline-offset: 2px;
+}
+
+canvas {
+  width: 100%;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  cursor: grab;
+  flex-shrink: 0;
+  display: block;
+}
+
+#cablingCanvas {
+  height: 196px;
+}
+
+canvas:active {
+  cursor: grabbing;
+}
+
+.cabling-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+  padding: 8px;
+  background-color: var(--surface-soft);
+  border-radius: 8px;
+}
+
+.cabling-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.cabling-legend-color {
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}

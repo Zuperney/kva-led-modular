@@ -1,0 +1,37 @@
+:root {
+  --font-ui: Inter, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-tech: "IBM Plex Mono", "Cascadia Code", monospace;
+  --bg: #eef2f6;
+  --bg-elevated: #e6ebf1;
+  --surface: #ffffff;
+  --surface-soft: #f7f9fc;
+  --surface-strong: #ffffff;
+  --ink: #18212b;
+  --ink-soft: #314152;
+  --muted: #607285;
+  --muted-strong: #4b5c6d;
+  --line: #d7dee7;
+  --line-strong: #bcc7d4;
+  --brand: #0d9488;
+  --brand-strong: #0f766e;
+  --brand-soft: #d9f3ef;
+  --accent: #2563eb;
+  --accent-soft: #dbeafe;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --shadow-sm: 0 6px 16px rgba(15, 23, 42, 0.06);
+  --shadow: 0 14px 34px rgba(15, 23, 42, 0.09);
+  --shadow-lg: 0 24px 60px rgba(15, 23, 42, 0.14);
+  --radius-sm: 10px;
+  --radius: 16px;
+  --radius-lg: 24px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 32px;
+  --space-8: 40px;
+}

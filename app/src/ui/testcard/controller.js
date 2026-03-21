@@ -14,7 +14,9 @@ export function bindTestCardEvents(params) {
   const btnTestCardStageCompose = document.getElementById(
     "btnTestCardStageCompose",
   );
-  const btnTestCardStageStyle = document.getElementById("btnTestCardStageStyle");
+  const btnTestCardStageStyle = document.getElementById(
+    "btnTestCardStageStyle",
+  );
   const btnTestCardStageExport = document.getElementById(
     "btnTestCardStageExport",
   );

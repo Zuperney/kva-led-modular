@@ -1,4 +1,4 @@
-const STATIC_CACHE = "ledlab-static-v5";
+const STATIC_CACHE = "ledlab-static-v6";
 const RUNTIME_CACHE = "ledlab-runtime-v1";
 
 const APP_SHELL = [
@@ -6,6 +6,20 @@ const APP_SHELL = [
   "./manifest.webmanifest",
   "./src/main.js",
   "./src/styles/main.css",
+  "./src/styles/_tokens.css",
+  "./src/styles/_base.css",
+  "./src/styles/_layout.css",
+  "./src/styles/_stats.css",
+  "./src/styles/_buttons.css",
+  "./src/styles/_forms.css",
+  "./src/styles/_tables.css",
+  "./src/styles/_screens.css",
+  "./src/styles/_cabinets.css",
+  "./src/styles/_cabling.css",
+  "./src/styles/_testcard.css",
+  "./src/styles/_report.css",
+  "./src/styles/_responsive.css",
+  "./src/styles/_print.css",
   "./assets/icons/apple-touch-icon.png",
   "./assets/icons/icon-192.png",
   "./assets/icons/icon-512.png",
@@ -19,9 +33,7 @@ self.addEventListener("install", (event) => {
       .open(STATIC_CACHE)
       .then((cache) =>
         Promise.all(
-          APP_SHELL.map((assetUrl) =>
-            cache.add(assetUrl).catch(() => null),
-          ),
+          APP_SHELL.map((assetUrl) => cache.add(assetUrl).catch(() => null)),
         ),
       )
       .then(() => self.skipWaiting()),

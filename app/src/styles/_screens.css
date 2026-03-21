@@ -1,0 +1,91 @@
+.screens-list {
+  display: grid;
+  gap: 8px;
+}
+
+.screen-item {
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: center;
+  gap: 6px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface-strong);
+}
+
+.screen-item.active {
+  border-color: var(--brand);
+  background: var(--brand-soft);
+}
+
+.screen-name {
+  font-weight: 600;
+}
+
+.screen-item-head {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 6px;
+}
+
+.screen-item-summary {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.screen-item-actions {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.btn-screen-action {
+  min-height: 36px;
+}
+
+.screen-item-editor {
+  margin-top: 8px;
+  display: grid;
+  gap: 8px;
+}
+
+.screen-config-row {
+  display: grid;
+  grid-template-columns: minmax(170px, 220px) minmax(0, 1fr);
+  gap: 8px;
+  align-items: center;
+}
+
+.screen-grid-edit {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(74px, 1fr));
+  gap: 6px;
+}
+
+.screen-cabinet-select {
+  min-width: 0;
+}
+
+.screen-meta {
+  display: block;
+  color: var(--muted);
+  font-size: 0.74rem;
+}
+
+.btn-screen-action i {
+  display: none;
+  width: 14px;
+  height: 14px;
+  stroke-width: 2;
+}
+
+.btn-screen-action svg {
+  display: none;
+  width: 14px;
+  height: 14px;
+  stroke-width: 2;
+  pointer-events: none;
+}

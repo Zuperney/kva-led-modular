@@ -1,0 +1,165 @@
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 12mm 10mm;
+  }
+
+  html,
+  body {
+    background: #fff !important;
+    color: #111 !important;
+    padding: 0;
+    margin: 0;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .shell {
+    max-width: 100%;
+  }
+
+  .hero,
+  .stats,
+  .tabs-menu-toggle,
+  .category-nav,
+  .panel:first-child,
+  .report-actions,
+  .footnote {
+    display: none !important;
+  }
+
+  .view-pane {
+    display: none !important;
+  }
+
+  .view-pane.active[data-view-pane="project"] {
+    display: block !important;
+  }
+
+  .view-pane.active[data-view-pane="report"] {
+    display: block !important;
+  }
+
+  .layout {
+    display: block;
+  }
+
+  .panel {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+  }
+
+  .report-sheet {
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    margin: 0;
+  }
+
+  .report-preview-head {
+    display: none !important;
+  }
+
+  .report-preview-stack {
+    gap: 0;
+  }
+
+  .report-page {
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 0;
+    margin: 0;
+    break-after: page;
+    page-break-after: always;
+  }
+
+  .report-page:not(:first-child) {
+    break-before: page;
+    page-break-before: always;
+  }
+
+  .report-preview-stack .report-page:last-child {
+    break-after: auto;
+    page-break-after: auto;
+  }
+
+  .report-header,
+  .report-page-header,
+  .report-summary-grid article,
+  .report-highlight-card,
+  .report-detail-panel,
+  .report-section,
+  .report-detail-list,
+  th,
+  td {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .report-detail-canvas,
+  .report-detail-canvas-print {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  table {
+    width: 100%;
+    page-break-inside: auto;
+  }
+
+  thead {
+    display: table-header-group;
+  }
+
+  tfoot {
+    display: table-row-group;
+  }
+
+  tr {
+    page-break-inside: avoid;
+  }
+
+  th,
+  td {
+    font-size: 10.5pt;
+    padding: 6px 5px;
+    border-bottom: 1px solid #d8d8d8;
+  }
+
+  .report-summary-grid {
+    margin-top: 10px;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .report-highlight-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  /* Single-column keeps canvas and data within A4 width */
+  .report-detail-grid {
+    display: block;
+  }
+
+  .report-detail-stack {
+    margin-top: 12px;
+  }
+
+  .report-detail-canvas,
+  .report-detail-canvas-print {
+    width: 100%;
+    min-height: 0;
+    height: auto;
+    max-height: 280px;
+    object-fit: contain;
+  }
+
+  .report-page--detail-map .report-detail-canvas,
+  .report-page--detail-map .report-detail-canvas-print {
+    max-height: 420px;
+  }
+}
