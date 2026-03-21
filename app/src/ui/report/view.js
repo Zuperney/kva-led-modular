@@ -182,7 +182,9 @@ function buildReportPages(args) {
 
   return [
     buildOverviewPage(context, false),
-    ...result.screens.map((screen) => buildDetailedScreenPage(screen, context)),
+    ...result.screens.flatMap((screen) =>
+      buildDetailedScreenPages(screen, context),
+    ),
   ];
 }
 
@@ -551,104 +553,141 @@ function buildCabinetsPage(context) {
   );
 }
 
-function buildDetailedScreenPage(screen, context) {
+function buildDetailedScreenPages(screen, context) {
   const { layouts, uiState, escapeHtml, formatNumber, formatInteger } = context;
   const layout = layouts.find((item) => String(item.id) === String(screen.id));
-  return (
-    '<article class="report-page">' +
-    buildPageHeader({
-      kicker: "Detalhamento por tela",
-      title: escapeHtml(screen.nome),
-      subtitle:
-        "Mapa de cabeamento, informacoes eletricas, peso, gabinete e parametros operacionais desta tela.",
-      metaLines: [
-        "Gabinete: " + escapeHtml(screen.gabinete?.nome || "-"),
-        "Matriz: " +
-          formatInteger(screen.quantidade_colunas) +
-          " x " +
-          formatInteger(screen.quantidade_linhas) +
-          " gab",
-        "Orientacao do cabo: " +
-          (uiState?.cablingOrientation === "vertical"
-            ? "Vertical"
-            : "Horizontal"),
-      ],
-    }) +
-    '<div class="report-detail-grid">' +
-    '<section class="report-detail-panel">' +
-    "<h4>Mapa de cabeamento</h4>" +
-    '<canvas class="report-detail-canvas" data-report-screen-id="' +
-    escapeHtml(String(screen.id)) +
-    '" width="1100" height="700"></canvas>' +
-    '<p class="report-note">Cada bloco colorido representa um grupo estimado de gabinetes por cabo, numerado na ordem de distribuicao.</p>' +
-    "</section>" +
-    '<section class="report-detail-stack">' +
-    '<div class="report-detail-panel">' +
-    "<h4>Resumo tecnico</h4>" +
-    buildDetailList([
-      ["Dimensoes", formatDimensions(screen, formatNumber)],
-      ["Area", formatNumber(screen.dimensoes_m.area, 2) + " m²"],
-      [
-        "Resolucao",
-        formatInteger(screen.pixels.largura) +
-          " x " +
-          formatInteger(screen.pixels.altura) +
-          " px",
-      ],
-      [
-        "Aspect ratio",
-        formatAspectRatio(
-          screen.pixels.largura,
-          screen.pixels.altura,
-          formatNumber,
-        ),
-      ],
-      ["Gabinetes", formatInteger(screen.gabinetes_totais)],
-      ["Peso", formatNumber(screen.peso_kg, 1) + " kg"],
-    ]) +
-    "</div>" +
-    '<div class="report-detail-panel">' +
-    "<h4>Energia e distribuicao</h4>" +
-    buildDetailList([
-      ["Potencia", formatNumber(screen.potencia_w, 0) + " W"],
-      ["Carga aparente", formatNumber(screen.carga_kva, 2) + " kVA"],
-      ["Corrente", formatNumber(screen.corrente_a, 2) + " A"],
-      ["Disjuntor minimo", formatNumber(screen.disjuntor_minimo_a, 2) + " A"],
-      ["Disjuntor sugerido", String(screen.disjuntor_comercial) + " A"],
-      ["Portas estimadas", layout ? formatInteger(layout.ports) : "-"],
-    ]) +
-    "</div>" +
-    '<div class="report-detail-panel">' +
-    "<h4>Cabinetes e cabeamento</h4>" +
-    buildDetailList([
-      ["Gabinete", escapeHtml(screen.gabinete?.nome || "-")],
-      [
-        "Tamanho do gabinete",
-        formatCabinetSize(screen.gabinete, formatInteger),
-      ],
-      [
-        "Resolucao por gabinete",
-        formatCabinetPixels(screen.gabinete, formatInteger),
-      ],
-      ["Cabos estimados", layout ? formatInteger(layout.cables) : "-"],
-      [
-        "Bloco base",
-        layout
-          ? formatInteger(layout.block.w) +
+  const orientationLabel =
+    uiState?.cablingOrientation === "vertical" ? "Vertical" : "Horizontal";
+
+  return [
+    '<article class="report-page report-page--detail-map">' +
+      buildPageHeader({
+        kicker: "Detalhamento por tela",
+        title: escapeHtml(screen.nome),
+        subtitle:
+          "Mapa de cabeamento com resolucao, dimensoes fisicas e referencias visuais desta tela.",
+        metaLines: [
+          "Pagina 1 de 2",
+          "Gabinete: " + escapeHtml(screen.gabinete?.nome || "-"),
+          "Matriz: " +
+            formatInteger(screen.quantidade_colunas) +
             " x " +
-            formatInteger(layout.block.h) +
-            " gab"
-          : "-",
-      ],
-      [
-        "Limite por cabo",
-        layout ? formatInteger(layout.maxGabsPerCable) + " gab" : "-",
-      ],
-    ]) +
-    "</div>" +
-    "</section></div>" +
-    "</article>"
-  );
+            formatInteger(screen.quantidade_linhas) +
+            " gab",
+          "Orientacao do cabo: " + orientationLabel,
+        ],
+      }) +
+      buildHighlightGrid([
+        ["Dimensoes", formatDimensions(screen, formatNumber)],
+        ["Area", formatNumber(screen.dimensoes_m.area, 2) + " m²"],
+        [
+          "Resolucao",
+          formatInteger(screen.pixels.largura) +
+            " x " +
+            formatInteger(screen.pixels.altura) +
+            " px",
+        ],
+        [
+          "Aspect ratio",
+          formatAspectRatio(
+            screen.pixels.largura,
+            screen.pixels.altura,
+            formatNumber,
+          ),
+        ],
+      ]) +
+      '<section class="report-detail-panel report-detail-map-panel">' +
+      "<h4>Mapa de cabeamento</h4>" +
+      '<canvas class="report-detail-canvas" data-report-screen-id="' +
+      escapeHtml(String(screen.id)) +
+      '" width="1100" height="700"></canvas>' +
+      '<p class="report-note">Cada bloco colorido representa um grupo estimado de gabinetes por cabo, numerado na ordem de distribuicao. Esta pagina concentra o mapa e as referencias de resolucao e tamanho para manter a leitura limpa no PDF.</p>' +
+      "</section>" +
+      "</article>",
+    '<article class="report-page report-page--detail-tech">' +
+      buildPageHeader({
+        kicker: "Detalhamento por tela",
+        title: escapeHtml(screen.nome) + " · Informacoes tecnicas",
+        subtitle:
+          "Energia, peso, gabinete e parametros operacionais separados em uma segunda pagina para evitar cortes entre folhas.",
+        metaLines: [
+          "Pagina 2 de 2",
+          "Gabinete: " + escapeHtml(screen.gabinete?.nome || "-"),
+          "Matriz: " +
+            formatInteger(screen.quantidade_colunas) +
+            " x " +
+            formatInteger(screen.quantidade_linhas) +
+            " gab",
+          "Orientacao do cabo: " + orientationLabel,
+        ],
+      }) +
+      '<section class="report-detail-stack report-detail-stack--technical">' +
+      '<div class="report-detail-panel">' +
+      "<h4>Resumo tecnico</h4>" +
+      buildDetailList([
+        ["Dimensoes", formatDimensions(screen, formatNumber)],
+        ["Area", formatNumber(screen.dimensoes_m.area, 2) + " m²"],
+        [
+          "Resolucao",
+          formatInteger(screen.pixels.largura) +
+            " x " +
+            formatInteger(screen.pixels.altura) +
+            " px",
+        ],
+        [
+          "Aspect ratio",
+          formatAspectRatio(
+            screen.pixels.largura,
+            screen.pixels.altura,
+            formatNumber,
+          ),
+        ],
+        ["Gabinetes", formatInteger(screen.gabinetes_totais)],
+        ["Peso", formatNumber(screen.peso_kg, 1) + " kg"],
+      ]) +
+      "</div>" +
+      '<div class="report-detail-panel">' +
+      "<h4>Energia e distribuicao</h4>" +
+      buildDetailList([
+        ["Potencia", formatNumber(screen.potencia_w, 0) + " W"],
+        ["Carga aparente", formatNumber(screen.carga_kva, 2) + " kVA"],
+        ["Corrente", formatNumber(screen.corrente_a, 2) + " A"],
+        ["Disjuntor minimo", formatNumber(screen.disjuntor_minimo_a, 2) + " A"],
+        ["Disjuntor sugerido", String(screen.disjuntor_comercial) + " A"],
+        ["Portas estimadas", layout ? formatInteger(layout.ports) : "-"],
+      ]) +
+      "</div>" +
+      '<div class="report-detail-panel">' +
+      "<h4>Cabinetes e cabeamento</h4>" +
+      buildDetailList([
+        ["Gabinete", escapeHtml(screen.gabinete?.nome || "-")],
+        [
+          "Tamanho do gabinete",
+          formatCabinetSize(screen.gabinete, formatInteger),
+        ],
+        [
+          "Resolucao por gabinete",
+          formatCabinetPixels(screen.gabinete, formatInteger),
+        ],
+        ["Cabos estimados", layout ? formatInteger(layout.cables) : "-"],
+        [
+          "Bloco base",
+          layout
+            ? formatInteger(layout.block.w) +
+              " x " +
+              formatInteger(layout.block.h) +
+              " gab"
+            : "-",
+        ],
+        [
+          "Limite por cabo",
+          layout ? formatInteger(layout.maxGabsPerCable) + " gab" : "-",
+        ],
+      ]) +
+      "</div>" +
+      "</section>" +
+      "</article>",
+  ];
 }
 
 function buildPageHeader({ kicker, title, subtitle, metaLines }) {

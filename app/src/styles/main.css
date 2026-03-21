@@ -738,6 +738,18 @@ th {
   padding: 12px;
 }
 
+.report-detail-map-panel {
+  padding: 14px;
+}
+
+.report-page--detail-map .report-detail-canvas {
+  min-height: 420px;
+}
+
+.report-page--detail-tech .report-detail-stack--technical {
+  gap: 14px;
+}
+
 button:focus-visible,
 input:focus-visible,
 select:focus-visible,
@@ -1987,8 +1999,14 @@ canvas:active {
   }
 
   main.panel .view-pane.active[data-view-pane="report"] .report-detail-list li,
-  main.panel .view-pane.active[data-view-pane="report"] .report-detail-list strong,
-  main.panel .view-pane.active[data-view-pane="report"] .report-detail-list span,
+  main.panel
+    .view-pane.active[data-view-pane="report"]
+    .report-detail-list
+    strong,
+  main.panel
+    .view-pane.active[data-view-pane="report"]
+    .report-detail-list
+    span,
   main.panel .view-pane.active[data-view-pane="report"] .report-page-meta {
     word-break: break-word;
     overflow-wrap: anywhere;
@@ -2026,6 +2044,10 @@ body[data-testcard-stage="export"]
 
   .report-detail-stack {
     margin-top: 12px;
+  }
+
+  .report-page--detail-map .report-detail-canvas {
+    min-height: 240px;
   }
 
   .report-page {
@@ -2195,5 +2217,10 @@ body[data-testcard-stage="export"]
     height: auto;
     max-height: 280px;
     object-fit: contain;
+  }
+
+  .report-page--detail-map .report-detail-canvas,
+  .report-page--detail-map .report-detail-canvas-print {
+    max-height: 420px;
   }
 }
