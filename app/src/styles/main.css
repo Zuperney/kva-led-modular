@@ -1921,6 +1921,46 @@ canvas:active {
   .report-sheet {
     overflow-x: clip;
   }
+
+  /* Mobile report UX: maximize useful content and keep actions reachable */
+  aside.panel .view-pane.active[data-view-pane="report"] .notice,
+  aside.panel .view-pane.active[data-view-pane="report"] .config-hint {
+    display: none;
+  }
+
+  aside.panel .view-pane.active[data-view-pane="report"] .config-card {
+    margin-top: 0 !important;
+    padding: 8px;
+    border-radius: 10px;
+  }
+
+  aside.panel .view-pane.active[data-view-pane="report"] .actions {
+    position: sticky;
+    bottom: 8px;
+    z-index: 4;
+    background: linear-gradient(to top, var(--surface) 60%, rgba(255, 255, 255, 0));
+    padding-top: 8px;
+    margin-top: 8px;
+  }
+
+  main.panel .view-pane.active[data-view-pane="report"] .report-preview-head {
+    position: sticky;
+    top: 0;
+    z-index: 3;
+    background: var(--surface);
+    padding-bottom: 8px;
+    margin-bottom: 8px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  main.panel .view-pane.active[data-view-pane="report"] .report-subtitle {
+    display: none;
+  }
+
+  main.panel .view-pane.active[data-view-pane="report"] .report-page {
+    padding: 10px;
+    border-radius: 10px;
+  }
 }
 
 body[data-testcard-stage="compose"]
