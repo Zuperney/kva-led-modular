@@ -36,6 +36,120 @@ function shouldUseMobilePdfFallback() {
   return isMobileUa || isStandalone;
 }
 
+function loadExternalScript(src, marker) {
+  const existing = document.querySelector('script[data-ext-lib="' + marker + '"]');
+  if (existing) {
+    if (existing.dataset.loaded === "1") return Promise.resolve();
+    return new Promise((resolve, reject) => {
+      existing.addEventListener("load", () => resolve(), { once: true });
+      existing.addEventListener("error", () => reject(new Error(marker)), {
+        once: true,
+      });
+    });
+  }
+
+  return new Promise((resolve, reject) => {
+    const script = document.createElement("script");
+    script.src = src;
+    script.async = true;
+    script.defer = true;
+    script.dataset.extLib = marker;
+    script.addEventListener(
+      "load",
+      () => {
+        script.dataset.loaded = "1";
+        resolve();
+      },
+      { once: true },
+    );
+    script.addEventListener("error", () => reject(new Error(marker)), {
+      once: true,
+    });
+    document.head.appendChild(script);
+  });
+}
+
+async function ensureMobilePdfLibraries() {
+  const hasJsPdf = Boolean(window.jspdf?.jsPDF);
+  const hasHtml2Canvas = typeof window.html2canvas === "function";
+  if (hasJsPdf && hasHtml2Canvas) return true;
+
+  await loadExternalScript(
+    "https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js",
+    "html2canvas",
+  );
+  await loadExternalScript(
+    "https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js",
+    "jspdf",
+  );
+
+  return Boolean(window.jspdf?.jsPDF) && typeof window.html2canvas === "function";
+}
+
+async function exportReportPdfMobileNative(refs) {
+  const source = refs.reportPreview;
+  if (!source) return false;
+
+  const pages = Array.from(source.querySelectorAll(".report-page"));
+  if (!pages.length) return false;
+
+  const libsReady = await ensureMobilePdfLibraries();
+  if (!libsReady) return false;
+
+  const { jsPDF } = window.jspdf;
+  const html2canvas = window.html2canvas;
+  if (typeof jsPDF !== "function" || typeof html2canvas !== "function") {
+    return false;
+  }
+
+  const pdf = new jsPDF({
+    orientation: "portrait",
+    unit: "pt",
+    format: "a4",
+    compress: true,
+  });
+  const pageWidth = pdf.internal.pageSize.getWidth();
+  const pageHeight = pdf.internal.pageSize.getHeight();
+  const margin = 18;
+  const printableWidth = pageWidth - margin * 2;
+  const printableHeight = pageHeight - margin * 2;
+  const scale = Math.min(2, Math.max(1.25, window.devicePixelRatio || 1));
+
+  for (let index = 0; index < pages.length; index += 1) {
+    const pageNode = pages[index];
+    const canvas = await html2canvas(pageNode, {
+      backgroundColor: "#ffffff",
+      scale,
+      useCORS: true,
+      allowTaint: true,
+      logging: false,
+      imageTimeout: 0,
+      removeContainer: true,
+    });
+
+    const imageData = canvas.toDataURL("image/jpeg", 0.96);
+    const ratio = canvas.width / canvas.height || 1;
+
+    let drawWidth = printableWidth;
+    let drawHeight = drawWidth / ratio;
+    if (drawHeight > printableHeight) {
+      drawHeight = printableHeight;
+      drawWidth = drawHeight * ratio;
+    }
+
+    const x = (pageWidth - drawWidth) / 2;
+    const y = margin;
+
+    if (index > 0) pdf.addPage("a4", "portrait");
+    pdf.addImage(imageData, "JPEG", x, y, drawWidth, drawHeight, undefined, "FAST");
+  }
+
+  const stamp = new Date().toISOString().slice(0, 10);
+  const filename = "relatorio-ledlab-" + stamp + ".pdf";
+  pdf.save(filename);
+  return true;
+}
+
 function openReportPdfFallback(refs, options = {}) {
   const { mobileCompat = false } = options;
   const source = refs.reportPreview;
@@ -100,9 +214,9 @@ function openReportPdfFallback(refs, options = {}) {
     cssHref +
     '"><style>body{margin:0;padding:16px;background:#fff} .report-sheet{border:none;padding:0} .report-page{box-shadow:none} .report-preview-head{display:none}</style></head><body>' +
     clone.innerHTML +
-    '<script>' +
+    "<script>" +
     exportScript +
-    '<\/script></body></html>';
+    "<\/script></body></html>";
 
   const win = window.open(
     "",
@@ -231,17 +345,32 @@ export function bindEvents(refs, getState, getUi, setState, setUi) {
     setUi({ reportType: target.value });
   });
 
-  refs.btnExportDetailedReportPdf?.addEventListener("click", () => {
+  refs.btnExportDetailedReportPdf?.addEventListener("click", async () => {
     document.body.classList.remove("print-compact");
     const useMobileCompat = shouldUseMobilePdfFallback();
     if (typeof window.print !== "function" || useMobileCompat) {
+      if (useMobileCompat) {
+        if (refs.migrationStatus) {
+          refs.migrationStatus.textContent =
+            "Gerando PDF em modo compatibilidade mobile...";
+        }
+        const generated = await exportReportPdfMobileNative(refs);
+        if (generated) {
+          if (refs.migrationStatus) {
+            refs.migrationStatus.textContent =
+              "PDF gerado por biblioteca nativa (mobile).";
+          }
+          return;
+        }
+      }
+
       const opened = openReportPdfFallback(refs, {
         mobileCompat: useMobileCompat,
       });
       if (refs.migrationStatus) {
         refs.migrationStatus.textContent = opened
           ? useMobileCompat
-            ? "Modo de compatibilidade mobile ativo: abra a visualizacao e toque em 'Imprimir / Salvar PDF'."
+            ? "Biblioteca mobile indisponivel. Modo de compatibilidade ativo: abra a visualizacao e toque em 'Imprimir / Salvar PDF'."
             : "Relatorio aberto em janela auxiliar para exportacao PDF no mobile/PWA."
           : "Nao foi possivel abrir janela de exportacao PDF. Verifique bloqueio de pop-up.";
       }
