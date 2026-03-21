@@ -40,6 +40,8 @@ function openReportPdfFallback(refs) {
   const source = refs.reportPreview;
   if (!source) return false;
 
+  const cssHref = new URL("./src/styles/main.css", window.location.href).href;
+
   const clone = source.cloneNode(true);
   const sourceCanvases = source.querySelectorAll(
     "canvas[data-report-screen-id]",
@@ -75,9 +77,11 @@ function openReportPdfFallback(refs) {
   if (!win) return false;
 
   win.document.write(
-    '<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Relatorio LedLab CORE</title><link rel="stylesheet" href="./src/styles/main.css"><style>body{margin:0;padding:16px;background:#fff} .report-sheet{border:none;padding:0} .report-page{box-shadow:none} .report-preview-head{display:none}</style></head><body>' +
+    '<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Relatorio LedLab CORE</title><link rel="stylesheet" href="' +
+      cssHref +
+      '"><style>body{margin:0;padding:16px;background:#fff} .report-sheet{border:none;padding:0} .report-page{box-shadow:none} .report-preview-head{display:none}</style></head><body>' +
       clone.innerHTML +
-      "<script>window.onload=function(){window.print();};<\/script></body></html>",
+      '<script>(function(){function waitForImages(){var imgs=Array.from(document.images||[]);if(!imgs.length){return Promise.resolve();}return Promise.all(imgs.map(function(img){if(img.complete){return Promise.resolve();}return new Promise(function(resolve){img.addEventListener("load",resolve,{once:true});img.addEventListener("error",resolve,{once:true});});}));}window.onload=function(){waitForImages().then(function(){requestAnimationFrame(function(){requestAnimationFrame(function(){window.print();});});});};})();<\/script></body></html>',
   );
   win.document.close();
   return true;
