@@ -8,24 +8,18 @@ import { buildTestCardComposition } from "./composition.js";
 export function bindTestCardEvents(params) {
   const { refs, getState, getUi, setUi, computeProject, exportTestCard } =
     params;
-
-  const testCardPriorityModal = document.getElementById(
-    "testCardPriorityModal",
+  const testCardStageButtons = document.querySelectorAll(
+    "[data-testcard-stage]",
   );
-  const btnOpenTestCardPriorityMenu = document.getElementById(
-    "btnOpenTestCardPriorityMenu",
+  const btnTestCardStageCompose = document.getElementById(
+    "btnTestCardStageCompose",
   );
-  const btnCloseTestCardPriorityMenu = document.getElementById(
-    "btnCloseTestCardPriorityMenu",
-  );
-  const testCardPriorityButtons = testCardPriorityModal?.querySelectorAll(
-    "[data-testcard-priority]",
+  const btnTestCardStageStyle = document.getElementById("btnTestCardStageStyle");
+  const btnTestCardStageExport = document.getElementById(
+    "btnTestCardStageExport",
   );
   const testCardLayoutSubmenu = document.getElementById(
     "testCardLayoutSubmenu",
-  );
-  const btnCloseTestCardLayoutSubmenu = document.getElementById(
-    "btnCloseTestCardLayoutSubmenu",
   );
   const testCardLayoutMenuGapPx = document.getElementById(
     "testCardLayoutMenuGapPx",
@@ -37,9 +31,6 @@ export function bindTestCardEvents(params) {
     "testCardLayoutMenuUseAll",
   );
   const testCardStyleSubmenu = document.getElementById("testCardStyleSubmenu");
-  const btnCloseTestCardStyleSubmenu = document.getElementById(
-    "btnCloseTestCardStyleSubmenu",
-  );
   const testCardStyleColorSwatches = testCardStyleSubmenu?.querySelectorAll(
     ".testcard-color-swatch",
   );
@@ -59,53 +50,16 @@ export function bindTestCardEvents(params) {
     "btnClearTestCardScreensModal",
   );
   const testCardLayoutQuick = document.getElementById("testCardLayoutQuick");
-  const isMobileViewport = window.matchMedia("(max-width: 980px)");
 
-  const setTestCardPriority = (priority) => {
-    if (!priority || priority === "all") {
-      delete document.body.dataset.testcardPriority;
-      return;
-    }
-    document.body.dataset.testcardPriority = priority;
-  };
-
-  const syncTestCardPriorityByViewport = () => {
-    if (!isMobileViewport.matches) {
-      delete document.body.dataset.testcardPriority;
-      return;
-    }
-
-    if (!document.body.dataset.testcardPriority) {
-      document.body.dataset.testcardPriority = "layout";
-    }
-  };
-
-  const closeTestCardPriorityModal = () => {
-    if (testCardPriorityModal instanceof HTMLElement) {
-      testCardPriorityModal.setAttribute("hidden", "");
-    }
-    if (testCardLayoutSubmenu instanceof HTMLElement) {
-      testCardLayoutSubmenu.setAttribute("hidden", "");
-    }
-    if (testCardStyleSubmenu instanceof HTMLElement) {
-      testCardStyleSubmenu.setAttribute("hidden", "");
-    }
-  };
-
-  const openTestCardLayoutSubmenu = () => {
-    if (!(testCardLayoutSubmenu instanceof HTMLElement)) return;
-    testCardLayoutSubmenu.removeAttribute("hidden");
-    if (testCardStyleSubmenu instanceof HTMLElement) {
-      testCardStyleSubmenu.setAttribute("hidden", "");
-    }
-  };
-
-  const openTestCardStyleSubmenu = () => {
-    if (!(testCardStyleSubmenu instanceof HTMLElement)) return;
-    testCardStyleSubmenu.removeAttribute("hidden");
-    if (testCardLayoutSubmenu instanceof HTMLElement) {
-      testCardLayoutSubmenu.setAttribute("hidden", "");
-    }
+  const setTestCardStage = (stage) => {
+    const nextStage = stage || "compose";
+    document.body.dataset.testcardStage = nextStage;
+    testCardStageButtons.forEach((button) => {
+      if (!(button instanceof HTMLButtonElement)) return;
+      const isActive = String(button.dataset.testcardStage || "") === nextStage;
+      button.classList.toggle("is-active", isActive);
+      button.setAttribute("aria-selected", isActive ? "true" : "false");
+    });
   };
 
   const closeTestCardManageScreensModal = () => {
@@ -114,46 +68,17 @@ export function bindTestCardEvents(params) {
     }
   };
 
-  btnOpenTestCardPriorityMenu?.addEventListener("click", () => {
-    if (!(testCardPriorityModal instanceof HTMLElement)) return;
-    closeTestCardManageScreensModal();
-    testCardPriorityModal.removeAttribute("hidden");
+  btnTestCardStageCompose?.addEventListener("click", () => {
+    setTestCardStage("compose");
+  });
+  btnTestCardStageStyle?.addEventListener("click", () => {
+    setTestCardStage("style");
+  });
+  btnTestCardStageExport?.addEventListener("click", () => {
+    setTestCardStage("export");
   });
 
-  btnCloseTestCardPriorityMenu?.addEventListener("click", () => {
-    closeTestCardPriorityModal();
-  });
-
-  testCardPriorityModal?.addEventListener("click", (event) => {
-    if (event.target === testCardPriorityModal) {
-      closeTestCardPriorityModal();
-    }
-  });
-
-  testCardPriorityButtons?.forEach((button) => {
-    if (!(button instanceof HTMLButtonElement)) return;
-    button.addEventListener("click", () => {
-      const priority = button.dataset.testcardPriority || "layout";
-      setTestCardPriority(priority);
-      if (priority === "layout") {
-        openTestCardLayoutSubmenu();
-        return;
-      }
-      if (priority === "style") {
-        openTestCardStyleSubmenu();
-        return;
-      }
-      closeTestCardPriorityModal();
-    });
-  });
-
-  btnCloseTestCardLayoutSubmenu?.addEventListener("click", () => {
-    closeTestCardPriorityModal();
-  });
-
-  btnCloseTestCardStyleSubmenu?.addEventListener("click", () => {
-    closeTestCardPriorityModal();
-  });
+  setTestCardStage("compose");
 
   testCardStyleColorSwatches?.forEach((swatch) => {
     if (!(swatch instanceof HTMLButtonElement)) return;
@@ -193,9 +118,6 @@ export function bindTestCardEvents(params) {
       icon.setAttribute("aria-pressed", next ? "true" : "false");
     });
   });
-
-  isMobileViewport.addEventListener("change", syncTestCardPriorityByViewport);
-  syncTestCardPriorityByViewport();
 
   const getCurrentCompositionIds = () => {
     const ui = getUi();
@@ -273,7 +195,6 @@ export function bindTestCardEvents(params) {
 
   btnOpenTestCardManageScreens?.addEventListener("click", () => {
     if (!(testCardManageScreensModal instanceof HTMLElement)) return;
-    closeTestCardPriorityModal();
     testCardManageScreensModal.removeAttribute("hidden");
   });
 
