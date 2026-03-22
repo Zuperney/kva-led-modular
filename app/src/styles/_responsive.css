@@ -67,6 +67,23 @@
     backdrop-filter: none;
   }
 
+  .view-flow-nav {
+    position: sticky;
+    bottom: 8px;
+    z-index: 5;
+    background: linear-gradient(
+      to top,
+      var(--surface) 60%,
+      rgba(255, 255, 255, 0)
+    );
+    padding-top: 8px;
+    margin-top: 6px;
+  }
+
+  .view-flow-label {
+    font-size: 0.74rem;
+  }
+
   body.mobile-tabs-open .category-nav {
     display: grid;
   }
@@ -226,6 +243,13 @@
   .panel {
     padding: 14px;
     border-radius: 14px;
+  }
+
+  .toast-stack {
+    top: auto;
+    bottom: 12px;
+    left: 10px;
+    right: 10px;
   }
 
   .report-actions {

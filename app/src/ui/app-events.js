@@ -32,13 +32,70 @@ import {
 import { bindTestCardEvents } from "./testcard/controller.js";
 import { exportTestCard } from "./testcard/export.js";
 
+const VIEW_ORDER = [
+  "home",
+  "project",
+  "cabling",
+  "info",
+  "report",
+  "cabinets",
+  "testcard",
+];
+
+const VIEW_LABEL = {
+  home: "Home",
+  project: "Projetos",
+  cabling: "Cabeamento",
+  info: "Info Tecnica",
+  report: "Relatorios",
+  cabinets: "Gabinetes",
+  testcard: "Test Card",
+};
+
 export function bindEvents(refs, getState, getUi, setState, setUi) {
+  function setActiveView(nextView) {
+    const view = VIEW_ORDER.includes(nextView) ? nextView : "home";
+    setUi({ activeView: view });
+    updateViewFlow(view);
+  }
+
+  function updateViewFlow(activeView) {
+    const currentIndex = VIEW_ORDER.indexOf(activeView);
+    const safeIndex = currentIndex >= 0 ? currentIndex : 0;
+    const prevView =
+      VIEW_ORDER[(safeIndex - 1 + VIEW_ORDER.length) % VIEW_ORDER.length];
+    const nextView = VIEW_ORDER[(safeIndex + 1) % VIEW_ORDER.length];
+
+    if (refs.viewFlowLabel) {
+      refs.viewFlowLabel.textContent =
+        VIEW_LABEL[activeView] || VIEW_LABEL.home;
+    }
+    if (refs.btnViewPrev) {
+      refs.btnViewPrev.dataset.targetView = prevView;
+    }
+    if (refs.btnViewNext) {
+      refs.btnViewNext.dataset.targetView = nextView;
+    }
+  }
+
   refs.navButtons.forEach((button) => {
     button.addEventListener("click", () => {
       const view = button.dataset.view;
-      setUi({ activeView: view || "project" });
+      setActiveView(view || "home");
     });
   });
+
+  refs.btnViewPrev?.addEventListener("click", () => {
+    const target = refs.btnViewPrev?.dataset.targetView || "home";
+    setActiveView(target);
+  });
+
+  refs.btnViewNext?.addEventListener("click", () => {
+    const target = refs.btnViewNext?.dataset.targetView || "project";
+    setActiveView(target);
+  });
+
+  updateViewFlow(getUi()?.activeView || "home");
 
   bindScreenEvents({
     refs,

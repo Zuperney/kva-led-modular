@@ -59,23 +59,51 @@
       <button class="nav-chip active" data-view="home" type="button">Home</button>
       <button class="nav-chip" data-view="project" type="button">Projetos de Painel</button>
       <button class="nav-chip" data-view="cabling" type="button">Cabeamento</button>
+      <button class="nav-chip" data-view="info" type="button">Info Tecnica</button>
       <button class="nav-chip" data-view="testcard" type="button">Test Card</button>
       <button class="nav-chip" data-view="report" type="button">Relatorios</button>
       <button class="nav-chip" data-view="cabinets" type="button">Catalogo de Gabinetes</button>
     </nav>
+
+    <div class="view-flow-nav screen-only" role="group" aria-label="Navegacao rapida entre abas">
+      <button id="btnViewPrev" class="btn-secondary" type="button" aria-label="Voltar para aba anterior">◀ Anterior</button>
+      <span id="viewFlowLabel" class="view-flow-label">Home</span>
+      <button id="btnViewNext" class="btn-primary" type="button" aria-label="Avancar para proxima aba">Proxima ▶</button>
+    </div>
 
     <section class="layout">
       <aside class="panel">
         <section class="view-pane active" data-view-pane="home">
           <h2>Home</h2>
           <div class="notice">
-            Bem-vindo ao LedLab CORE. Use as abas para abrir os modulos de projeto, cabeamento, test card e relatorios.
+            Bem-vindo ao LedLab CORE. Esta versao prioriza uso em celular. Siga a ordem sugerida abaixo para evitar erros de navegacao e exportacao.
           </div>
+
+          <section class="config-card home-guide-card" style="margin-top: 10px;">
+            <h3>Guia rapido (fluxo recomendado)</h3>
+            <ol class="home-guide-list">
+              <li><strong>Projetos:</strong> adicione telas, gabinete, dimensoes e parametros eletricos.</li>
+              <li><strong>Cabeamento:</strong> escolha orientacao e estrategia para estimativa de portas/cabos.</li>
+              <li><strong>Info Tecnica:</strong> revise conceitos de potencia, corrente, carga e disjuntor.</li>
+              <li><strong>Relatorios:</strong> monte o pacote e exporte PDF com o botao principal.</li>
+            </ol>
+            <p class="config-hint">Dica mobile: use os botoes Anterior/Proxima para navegar sem abrir o menu de abas.</p>
+          </section>
+
+          <section class="config-card home-guide-card">
+            <h3>Como exportar PDF sem travar</h3>
+            <ul class="home-guide-list home-guide-list--bullets">
+              <li>No celular, prefira <strong>Relatorios &gt; Exportar PDF</strong> e aguarde a geracao finalizar.</li>
+              <li>Se o navegador bloquear pop-up, o app mostrara aviso em cards no topo da tela.</li>
+              <li>Se a exportacao falhar, volte para Relatorios e tente novamente apos atualizar a visualizacao.</li>
+            </ul>
+          </section>
+
           <div class="actions" style="margin-top: 10px;">
-            <button class="btn-primary" data-view="project" type="button">Abrir Projetos</button>
-            <button class="btn-secondary" data-view="cabling" type="button">Abrir Cabeamento</button>
+            <button class="btn-primary" data-view="project" type="button">Comecar em Projetos</button>
+            <button class="btn-secondary" data-view="info" type="button">Abrir Info Tecnica</button>
           </div>
-          <p class="config-hint">Esta tela substitui a landing separada para manter um unico fluxo de navegacao.</p>
+          <p class="config-hint">Este fluxo reduz retrabalho e melhora a experiencia em telas pequenas.</p>
         </section>
 
         <section class="view-pane" data-view-pane="project">
@@ -398,8 +426,36 @@
 
             <div class="actions" data-testcard-stage-group="export">
               <button id="btnExportTestCardPng" class="btn-primary" type="button">Exportar PNG</button>
-              <button id="btnExportTestCardPdf" class="btn-secondary" type="button">Exportar PDF</button>
+              <button class="btn-secondary" type="button" disabled title="Exportacao PDF do Test Card desativada nesta fase">PDF Test Card (desativado)</button>
             </div>
+          </div>
+        </section>
+
+        <section class="view-pane" data-view-pane="info">
+          <h2>Info Tecnica</h2>
+          <div class="notice">
+            Glossario tecnico para consulta rapida. Use esta aba para explicar grandezas para clientes e equipe de campo.
+          </div>
+          <section class="config-card" style="margin-top: 10px;">
+            <h3>Grandezas eletricas principais</h3>
+            <ul class="home-guide-list home-guide-list--bullets">
+              <li><strong>Potencia (W):</strong> consumo real do sistema em watts.</li>
+              <li><strong>Carga aparente (kVA):</strong> potencia considerando fator de potencia.</li>
+              <li><strong>Corrente (A):</strong> intensidade de corrente exigida por fase/circuito.</li>
+              <li><strong>Disjuntor:</strong> protecao recomendada com margem operacional.</li>
+            </ul>
+          </section>
+          <section class="config-card">
+            <h3>Leitura pratica dos resultados</h3>
+            <ul class="home-guide-list home-guide-list--bullets">
+              <li>Se a corrente subir muito, revise brilho, margem e reserva de circuito.</li>
+              <li>Se disjuntor sugerido ficar alto, divida carga em mais circuitos.</li>
+              <li>Sempre valide tensao e sistema eletrico antes da exportacao final.</li>
+            </ul>
+          </section>
+          <div class="actions" style="margin-top: 10px;">
+            <button class="btn-secondary" data-view="project" type="button">Ir para Projetos</button>
+            <button class="btn-primary" data-view="report" type="button">Ir para Relatorios</button>
           </div>
         </section>
 
@@ -442,17 +498,71 @@
             <header class="report-header">
               <div>
                 <h2>LedLab CORE</h2>
-                <p class="report-subtitle">Calculadora modular para paineis de LED com projeto, catalogo, cabeamento e relatorios.</p>
+                <p class="report-subtitle">Calculadora modular para paineis de LED com foco em experiencia mobile e fluxo operacional completo.</p>
               </div>
               <div class="report-meta">
                 <p><strong>Status:</strong> <span>Pronto para uso</span></p>
                 <p><strong>Entrada:</strong> <span>index.html -> main.html</span></p>
               </div>
             </header>
+            <section class="report-note" style="margin-top:12px;">
+              <strong>Passo a passo completo:</strong><br>
+              1) Configure parametros eletricos em Projetos.<br>
+              2) Cadastre todas as telas com gabinete correto.<br>
+              3) Revise Cabeamento para validar portas e roteamento.<br>
+              4) Consulte Info Tecnica para confirmar conceitos e comunicacao com o cliente.<br>
+              5) Gere Relatorios e exporte PDF ao final.
+            </section>
             <div class="actions" style="margin-top: 12px;">
               <button class="btn-primary" data-view="project" type="button">Comecar Projeto</button>
-              <button class="btn-secondary" data-view="report" type="button">Ir para Relatorios</button>
+              <button class="btn-secondary" data-view="info" type="button">Abrir Guia Tecnico</button>
             </div>
+          </section>
+        </section>
+
+        <section class="view-pane" data-view-pane="info">
+          <div class="report-preview-head">
+            <div>
+              <h2>Info Tecnica Aprofundada</h2>
+              <p class="report-subtitle">Conceitos eletricos e tecnicos para tomada de decisao e apresentacao.</p>
+            </div>
+            <div class="report-page-count">Guia</div>
+          </div>
+
+          <section class="report-page">
+            <div class="report-page-header">
+              <h3>Conceitos essenciais</h3>
+            </div>
+            <ul class="home-guide-list home-guide-list--bullets">
+              <li><strong>Potencia ativa (W):</strong> energia efetivamente convertida em trabalho.</li>
+              <li><strong>Carga aparente (VA/kVA):</strong> combina potencia ativa e reativa.</li>
+              <li><strong>Fator de potencia (FP):</strong> relacao entre potencia ativa e aparente.</li>
+              <li><strong>Corrente (A):</strong> depende de potencia, tensao e fator de potencia.</li>
+            </ul>
+          </section>
+
+          <section class="report-page">
+            <div class="report-page-header">
+              <h3>Formulas de referencia</h3>
+            </div>
+            <ul class="home-guide-list home-guide-list--bullets">
+              <li><strong>Monofasico:</strong> I = P / (V x FP)</li>
+              <li><strong>Bifasico:</strong> validar distribuicao de carga por fase no contexto da instalacao.</li>
+              <li><strong>Trifasico equilibrado:</strong> I = P / (sqrt(3) x V x FP)</li>
+            </ul>
+            <p class="config-hint">No app, o disjuntor sugerido considera margem de seguranca operacional configuravel.</p>
+          </section>
+
+          <section class="report-page">
+            <div class="report-page-header">
+              <h3>Boas praticas de campo</h3>
+            </div>
+            <ul class="home-guide-list home-guide-list--bullets">
+              <li>Confirme tensao real no local antes de fechar o dimensionamento.</li>
+              <li>Nao trabalhe no limite absoluto de corrente do circuito.</li>
+              <li>Mantenha reserva para picos e variacoes operacionais.</li>
+              <li>Documente no relatorio final o sistema, tensao e disjuntor adotado.</li>
+            </ul>
           </section>
         </section>
 

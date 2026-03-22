@@ -142,9 +142,9 @@ export async function exportReportPdfMobileNative(refs) {
 }
 
 /**
- * Opens a styled print-popup with the report content.
- * On mobile (mobileCompat: true) falls back to a Blob URL redirect if the
- * popup is blocked, and injects a sticky "Imprimir / Salvar PDF" bar.
+ * Opens a styled print document with the report content.
+ * On mobile (mobileCompat: true) uses same-tab Blob navigation to avoid
+ * blank popup flows and injects a sticky action bar.
  */
 export function openReportPdfFallback(refs, options = {}) {
   const { mobileCompat = false } = options;
@@ -203,17 +203,25 @@ export function openReportPdfFallback(refs, options = {}) {
   });
 
   const exportScript = mobileCompat
-    ? '(function(){function waitForImages(){var imgs=Array.from(document.images||[]);if(!imgs.length){return Promise.resolve();}return Promise.all(imgs.map(function(img){if(img.complete){return Promise.resolve();}return new Promise(function(resolve){img.addEventListener("load",resolve,{once:true});img.addEventListener("error",resolve,{once:true});});}));}function createBar(){var bar=document.createElement("div");bar.style.position="sticky";bar.style.top="0";bar.style.zIndex="9999";bar.style.display="flex";bar.style.gap="8px";bar.style.padding="10px";bar.style.background="#ffffff";bar.style.borderBottom="1px solid #d6d6d6";bar.style.margin="-16px -16px 12px";var btn=document.createElement("button");btn.type="button";btn.textContent="Imprimir / Salvar PDF";btn.style.padding="10px 14px";btn.style.borderRadius="10px";btn.style.border="1px solid #0f766e";btn.style.background="#0f766e";btn.style.color="#fff";btn.style.fontWeight="600";btn.addEventListener("click",function(){window.print();});var note=document.createElement("span");note.textContent="Modo compatibilidade mobile ativo";note.style.alignSelf="center";note.style.fontSize="13px";note.style.color="#334155";bar.appendChild(btn);bar.appendChild(note);document.body.insertBefore(bar,document.body.firstChild);}window.onload=function(){waitForImages().then(function(){requestAnimationFrame(function(){requestAnimationFrame(function(){createBar();});});});};})();'
+    ? '(function(){function waitForImages(){var imgs=Array.from(document.images||[]);if(!imgs.length){return Promise.resolve();}return Promise.all(imgs.map(function(img){if(img.complete){return Promise.resolve();}return new Promise(function(resolve){img.addEventListener("load",resolve,{once:true});img.addEventListener("error",resolve,{once:true});});}));}function createBar(){var bar=document.createElement("div");bar.style.position="sticky";bar.style.top="0";bar.style.zIndex="9999";bar.style.display="flex";bar.style.gap="8px";bar.style.padding="10px";bar.style.background="#ffffff";bar.style.borderBottom="1px solid #d6d6d6";bar.style.margin="-16px -16px 12px";var btn=document.createElement("button");btn.type="button";btn.textContent="Imprimir / Salvar PDF";btn.style.padding="10px 14px";btn.style.borderRadius="10px";btn.style.border="1px solid #0f766e";btn.style.background="#0f766e";btn.style.color="#fff";btn.style.fontWeight="600";btn.addEventListener("click",function(){window.print();});var back=document.createElement("button");back.type="button";back.textContent="Voltar";back.style.padding="10px 14px";back.style.borderRadius="10px";back.style.border="1px solid #94a3b8";back.style.background="#ffffff";back.style.color="#0f172a";back.style.fontWeight="600";back.addEventListener("click",function(){window.history.back();});var note=document.createElement("span");note.textContent="Modo compatibilidade mobile ativo";note.style.alignSelf="center";note.style.fontSize="13px";note.style.color="#334155";bar.appendChild(btn);bar.appendChild(back);bar.appendChild(note);document.body.insertBefore(bar,document.body.firstChild);}window.onload=function(){waitForImages().then(function(){requestAnimationFrame(function(){requestAnimationFrame(function(){createBar();});});});};})();'
     : '(function(){function waitForImages(){var imgs=Array.from(document.images||[]);if(!imgs.length){return Promise.resolve();}return Promise.all(imgs.map(function(img){if(img.complete){return Promise.resolve();}return new Promise(function(resolve){img.addEventListener("load",resolve,{once:true});img.addEventListener("error",resolve,{once:true});});}));}window.onload=function(){waitForImages().then(function(){requestAnimationFrame(function(){requestAnimationFrame(function(){window.print();});});});};})();';
 
   const html =
-    '<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Relatorio LedLab CORE</title><link rel="stylesheet" href="' +
+    '<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>Relatorio LedLab CORE</title><link rel="stylesheet" href="' +
     cssHref +
-    '"><style>body{margin:0;padding:16px;background:#fff} .report-sheet{border:none;padding:0} .report-page{box-shadow:none} .report-preview-head{display:none}</style></head><body>' +
+    '"><style>:root{color-scheme:light only} html,body{margin:0;padding:16px;background:#fff !important;color:#0f172a !important} .report-sheet{border:none;padding:0} .report-page{box-shadow:none} .report-preview-head{display:none} @media print {*{-webkit-print-color-adjust:exact;print-color-adjust:exact}}</style></head><body>' +
     clone.innerHTML +
     "<script>" +
     exportScript +
     "<\/script></body></html>";
+
+  if (mobileCompat) {
+    const blob = new Blob([html], { type: "text/html" });
+    const url = URL.createObjectURL(blob);
+    window.location.assign(url);
+    window.setTimeout(() => URL.revokeObjectURL(url), 60_000);
+    return true;
+  }
 
   const win = window.open(
     "",
@@ -223,14 +231,6 @@ export function openReportPdfFallback(refs, options = {}) {
   if (win) {
     win.document.write(html);
     win.document.close();
-    return true;
-  }
-
-  if (mobileCompat) {
-    const blob = new Blob([html], { type: "text/html" });
-    const url = URL.createObjectURL(blob);
-    window.location.href = url;
-    window.setTimeout(() => URL.revokeObjectURL(url), 60_000);
     return true;
   }
 

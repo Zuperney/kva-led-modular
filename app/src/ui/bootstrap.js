@@ -14,6 +14,7 @@ import { syncElectricalControls } from "./electrical/controller.js";
 import { loadElectricalSystemPreference } from "./electrical/preferences.js";
 import { setupReportPrintHandlers } from "./report/view.js";
 import { createUiRefs } from "./refs.js";
+import { setupStatusToastBridge } from "./shared/notifier.js";
 import {
   clampNonNegativeNumber,
   clampPositiveInt,
@@ -29,6 +30,7 @@ function refreshIcons() {
 
 export function bootstrapApp() {
   const refs = createUiRefs();
+  setupStatusToastBridge(refs.migrationStatus);
   let warnedStorageFallback = false;
 
   function notifyStorageFallback() {

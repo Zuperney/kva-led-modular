@@ -3,6 +3,9 @@ import { getElement } from "./dom.js";
 export function createUiRefs() {
   const refs = {
     migrationStatus: getElement("migrationStatus"),
+    btnViewPrev: getElement("btnViewPrev"),
+    btnViewNext: getElement("btnViewNext"),
+    viewFlowLabel: getElement("viewFlowLabel"),
     screensList: getElement("screensList"),
     navButtons: document.querySelectorAll("[data-view]"),
     viewPanes: document.querySelectorAll("[data-view-pane]"),

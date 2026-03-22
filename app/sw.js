@@ -1,4 +1,4 @@
-const STATIC_CACHE = "ledlab-static-v6";
+const STATIC_CACHE = "ledlab-static-v7";
 const RUNTIME_CACHE = "ledlab-runtime-v1";
 
 const APP_SHELL = [

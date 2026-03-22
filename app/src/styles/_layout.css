@@ -79,6 +79,29 @@
   margin-bottom: 12px;
 }
 
+.view-flow-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 4px 0 12px;
+}
+
+.view-flow-nav .btn-primary,
+.view-flow-nav .btn-secondary {
+  min-height: 40px;
+  padding: 8px 12px;
+}
+
+.view-flow-label {
+  flex: 1;
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--muted);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
 .nav-chip {
   border: 1px solid var(--line-strong);
   background: var(--surface);
@@ -163,6 +186,107 @@
   font-size: 0.86rem;
   color: var(--muted);
   line-height: 1.6;
+}
+
+.home-guide-card {
+  border-radius: 14px;
+}
+
+.home-guide-list {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 8px;
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+}
+
+.home-guide-list--bullets {
+  list-style: disc;
+}
+
+.toast-stack {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  left: 12px;
+  display: grid;
+  gap: 8px;
+  z-index: 1600;
+  pointer-events: none;
+}
+
+.toast-card {
+  pointer-events: auto;
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-left-width: 6px;
+  border-radius: 12px;
+  box-shadow: var(--shadow-lg);
+  padding: 10px 12px;
+  display: grid;
+  gap: 6px;
+  animation: toast-in 180ms ease-out;
+}
+
+.toast-card--info {
+  border-left-color: #0ea5e9;
+}
+
+.toast-card--success {
+  border-left-color: #16a34a;
+}
+
+.toast-card--warning {
+  border-left-color: #d97706;
+}
+
+.toast-card--error {
+  border-left-color: #dc2626;
+}
+
+.toast-title {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+}
+
+.toast-body {
+  font-size: 0.88rem;
+  color: var(--ink);
+  line-height: 1.35;
+}
+
+.toast-close {
+  justify-self: end;
+  border: 1px solid var(--line-strong);
+  background: var(--surface-alt);
+  color: var(--ink-soft);
+  border-radius: 8px;
+  min-height: 30px;
+  padding: 4px 8px;
+  font-size: 0.76rem;
+  font-weight: 600;
+}
+
+.toast-card.is-exit {
+  opacity: 0;
+  transform: translateY(-4px);
+  transition:
+    opacity 0.18s ease,
+    transform 0.18s ease;
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .screen-only {
